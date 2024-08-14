@@ -17,6 +17,8 @@ package io.kojan.xml;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -113,10 +115,27 @@ public class Entity<Type, Bean extends Builder<Type>> {
         }
     }
 
+    public Type fromXML(String xml) throws IOException, XMLStreamException {
+        try (Reader reader = new StringReader(xml)) {
+            return readFromXML(reader);
+        }
+    }
+
+    public void writeToXML(Writer writer, Type object) throws IOException, XMLStreamException {
+        XMLDumper dumper = new XMLDumper(writer);
+        dumper.dumpDocument(this, object);
+    }
+
     public void writeToXML(Path path, Type object) throws IOException, XMLStreamException {
         try (Writer writer = Files.newBufferedWriter(path)) {
-            XMLDumper dumper = new XMLDumper(writer);
-            dumper.dumpDocument(this, object);
+            writeToXML(writer, object);
+        }
+    }
+
+    public String toXML(Type object) throws IOException, XMLStreamException {
+        try (StringWriter writer = new StringWriter()) {
+            writeToXML(writer, object);
+            return writer.toString();
         }
     }
 }
