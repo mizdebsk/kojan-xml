@@ -17,9 +17,7 @@ package io.kojan.xml;
 
 import javax.xml.stream.XMLStreamException;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 public abstract class Constituent<EnclosingType, EnclosingBean, NestedType, NestedBean> {
     private final String tag;
     private final Getter<EnclosingType, Iterable<NestedType>> getter;
@@ -27,8 +25,12 @@ public abstract class Constituent<EnclosingType, EnclosingBean, NestedType, Nest
     private final boolean optional;
     private final boolean unique;
 
-    public Constituent(String tag, Getter<EnclosingType, Iterable<NestedType>> getter,
-            Setter<EnclosingBean, NestedType> setter, boolean optional, boolean unique) {
+    public Constituent(
+            String tag,
+            Getter<EnclosingType, Iterable<NestedType>> getter,
+            Setter<EnclosingBean, NestedType> setter,
+            boolean optional,
+            boolean unique) {
         this.tag = tag;
         this.getter = getter;
         this.setter = setter;

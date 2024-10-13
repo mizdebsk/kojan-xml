@@ -17,9 +17,7 @@ package io.kojan.xml;
 
 import java.util.Collections;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 public class GetterAdapter<OuterType, NestedType> implements Getter<OuterType, Iterable<NestedType>> {
     private final Getter<OuterType, NestedType> delegate;
 

@@ -15,9 +15,7 @@
  */
 package io.kojan.xml;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 public interface Builder<Type> {
     Type build();
 }

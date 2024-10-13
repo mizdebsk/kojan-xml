@@ -26,12 +26,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 public class Entity<Type, Bean extends Builder<Type>> {
     private final String tag;
     private final Factory<Bean> beanFactory;
@@ -55,47 +52,58 @@ public class Entity<Type, Bean extends Builder<Type>> {
     }
 
     public void addAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        elements.add(new Attribute<>(tag, new GetterAdapter<>(getter), setter, Function.identity(), Function.identity(),
-                false, true));
+        elements.add(new Attribute<>(
+                tag, new GetterAdapter<>(getter), setter, Function.identity(), Function.identity(), false, true));
     }
 
-    public <AttributeType> void addAttribute(String tag, Getter<Type, AttributeType> getter,
-            Setter<Bean, AttributeType> setter, Function<AttributeType, String> toStringAdapter,
+    public <AttributeType> void addAttribute(
+            String tag,
+            Getter<Type, AttributeType> getter,
+            Setter<Bean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        elements.add(new Attribute<>(tag, new GetterAdapter<>(getter), setter, toStringAdapter, fromStringAdapter,
-                false, true));
+        elements.add(new Attribute<>(
+                tag, new GetterAdapter<>(getter), setter, toStringAdapter, fromStringAdapter, false, true));
     }
 
     public void addOptionalAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        elements.add(new Attribute<>(tag, new GetterAdapter<>(getter), setter, Function.identity(), Function.identity(),
-                true, true));
+        elements.add(new Attribute<>(
+                tag, new GetterAdapter<>(getter), setter, Function.identity(), Function.identity(), true, true));
     }
 
-    public <AttributeType> void addOptionalAttribute(String tag, Getter<Type, AttributeType> getter,
-            Setter<Bean, AttributeType> setter, Function<AttributeType, String> toStringAdapter,
+    public <AttributeType> void addOptionalAttribute(
+            String tag,
+            Getter<Type, AttributeType> getter,
+            Setter<Bean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        elements.add(new Attribute<>(tag, new GetterAdapter<>(getter), setter, toStringAdapter, fromStringAdapter, true,
-                true));
+        elements.add(new Attribute<>(
+                tag, new GetterAdapter<>(getter), setter, toStringAdapter, fromStringAdapter, true, true));
     }
 
     public void addMultiAttribute(String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
         elements.add(new Attribute<>(tag, getter, setter, Function.identity(), Function.identity(), true, false));
     }
 
-    public <AttributeType> void addMultiAttribute(String tag, Getter<Type, Iterable<AttributeType>> getter,
-            Setter<Bean, AttributeType> setter, Function<AttributeType, String> toStringAdapter,
+    public <AttributeType> void addMultiAttribute(
+            String tag,
+            Getter<Type, Iterable<AttributeType>> getter,
+            Setter<Bean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
         elements.add(new Attribute<>(tag, getter, setter, toStringAdapter, fromStringAdapter, true, false));
     }
 
     public <RelatedType, RelatedBean extends Builder<RelatedType>> void addSingularRelationship(
-            Entity<RelatedType, RelatedBean> relatedEntity, Getter<Type, RelatedType> getter,
+            Entity<RelatedType, RelatedBean> relatedEntity,
+            Getter<Type, RelatedType> getter,
             Setter<Bean, RelatedType> setter) {
         elements.add(new Relationship<>(relatedEntity, new GetterAdapter<>(getter), setter, true, true));
     }
 
     public <RelatedType, RelatedBean extends Builder<RelatedType>> void addRelationship(
-            Entity<RelatedType, RelatedBean> relatedEntity, Getter<Type, Iterable<RelatedType>> getter,
+            Entity<RelatedType, RelatedBean> relatedEntity,
+            Getter<Type, Iterable<RelatedType>> getter,
             Setter<Bean, RelatedType> setter) {
         elements.add(new Relationship<>(relatedEntity, getter, setter, true, false));
     }

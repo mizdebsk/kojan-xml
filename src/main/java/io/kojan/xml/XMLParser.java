@@ -26,14 +26,11 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 public class XMLParser {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader cursor;
@@ -48,7 +45,7 @@ public class XMLParser {
     }
 
     public String parseText() throws XMLStreamException {
-        for (StringBuilder sb = new StringBuilder();; cursor.next()) {
+        for (StringBuilder sb = new StringBuilder(); ; cursor.next()) {
             if (cursor.getEventType() == CHARACTERS) {
                 sb.append(cursor.getText());
             } else if (cursor.getEventType() != COMMENT) {
@@ -121,7 +118,7 @@ public class XMLParser {
 
         Set<Constituent<Type, Bean, ?, ?>> allowedElements = new LinkedHashSet<>(entity.getElements());
 
-        for (Iterator<Constituent<Type, Bean, ?, ?>> iterator = allowedElements.iterator(); iterator.hasNext();) {
+        for (Iterator<Constituent<Type, Bean, ?, ?>> iterator = allowedElements.iterator(); iterator.hasNext(); ) {
             Constituent<Type, Bean, ?, ?> constituent = iterator.next();
 
             if (constituent.tryParse(this, bean)) {

@@ -16,14 +16,11 @@
 package io.kojan.xml;
 
 import java.io.Writer;
-
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 public class XMLDumper {
     private static final XMLOutputFactory XML_OUTPUT_FACTORY = XMLOutputFactory.newInstance();
 
@@ -35,7 +32,7 @@ public class XMLDumper {
     }
 
     private void indent() throws XMLStreamException {
-        for (int i = indent; i-- > 0;) {
+        for (int i = indent; i-- > 0; ) {
             cursor.writeCharacters("  ");
         }
     }

@@ -15,9 +15,7 @@
  */
 package io.kojan.xml;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 @FunctionalInterface
 public interface Getter<OuterType, NestedType> {
     NestedType get(OuterType object);
