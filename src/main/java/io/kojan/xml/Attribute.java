@@ -16,21 +16,22 @@
 package io.kojan.xml;
 
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 class Attribute<EnclosingType, EnclosingBean, AttributeType>
-        extends
-            Constituent<EnclosingType, EnclosingBean, AttributeType, String> {
+        extends Constituent<EnclosingType, EnclosingBean, AttributeType, String> {
     private final Function<AttributeType, String> toStringAdapter;
     private final Function<String, AttributeType> fromStringAdapter;
 
-    public Attribute(String tag, Getter<EnclosingType, Iterable<AttributeType>> getter,
-            Setter<EnclosingBean, AttributeType> setter, Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter, boolean optional, boolean unique) {
+    public Attribute(
+            String tag,
+            Getter<EnclosingType, Iterable<AttributeType>> getter,
+            Setter<EnclosingBean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
+            Function<String, AttributeType> fromStringAdapter,
+            boolean optional,
+            boolean unique) {
         super(tag, getter, setter, optional, unique);
         this.toStringAdapter = toStringAdapter;
         this.fromStringAdapter = fromStringAdapter;

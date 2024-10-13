@@ -17,17 +17,17 @@ package io.kojan.xml;
 
 import javax.xml.stream.XMLStreamException;
 
-/**
- * @author Mikolaj Izdebski
- */
+/** @author Mikolaj Izdebski */
 class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
-        extends
-            Constituent<EnclosingType, EnclosingBean, RelatedType, RelatedBean> {
+        extends Constituent<EnclosingType, EnclosingBean, RelatedType, RelatedBean> {
     private final Entity<RelatedType, RelatedBean> relatedEntity;
 
-    public Relationship(Entity<RelatedType, RelatedBean> relatedEntity,
-            Getter<EnclosingType, Iterable<RelatedType>> getter, Setter<EnclosingBean, RelatedType> setter,
-            boolean mandatory, boolean unique) {
+    public Relationship(
+            Entity<RelatedType, RelatedBean> relatedEntity,
+            Getter<EnclosingType, Iterable<RelatedType>> getter,
+            Setter<EnclosingBean, RelatedType> setter,
+            boolean mandatory,
+            boolean unique) {
         super(relatedEntity.getTag(), getter, setter, mandatory, unique);
         this.relatedEntity = relatedEntity;
     }
