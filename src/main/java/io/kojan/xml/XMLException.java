@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2020-2024 Red Hat, Inc.
+ * Copyright (c) 2024 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 package io.kojan.xml;
 
 /** @author Mikolaj Izdebski */
-public interface XMLParser {
+public class XMLException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-    String parseText() throws XMLException;
+    public XMLException(String message) {
+        super(message);
+    }
 
-    boolean hasStartElement() throws XMLException;
+    public XMLException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    boolean hasStartElement(String tag) throws XMLException;
-
-    String parseStartElement() throws XMLException;
-
-    void parseStartElement(String tag) throws XMLException;
-
-    void parseEndElement(String tag) throws XMLException;
-
-    <Type, Bean extends Builder<Type>> void parseEntity(Entity<Type, Bean> entity, Bean bean) throws XMLException;
+    public XMLException(Throwable cause) {
+        super(cause);
+    }
 }

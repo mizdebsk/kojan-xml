@@ -15,8 +15,6 @@
  */
 package io.kojan.xml;
 
-import javax.xml.stream.XMLStreamException;
-
 /** @author Mikolaj Izdebski */
 class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
         extends Constituent<EnclosingType, EnclosingBean, RelatedType, RelatedBean> {
@@ -33,12 +31,12 @@ class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extend
     }
 
     @Override
-    protected void dump(XMLDumper dumper, RelatedType value) throws XMLStreamException {
+    protected void dump(XMLDumper dumper, RelatedType value) throws XMLException {
         dumper.dumpEntity(relatedEntity, value);
     }
 
     @Override
-    protected RelatedType parse(XMLParser parser) throws XMLStreamException {
+    protected RelatedType parse(XMLParser parser) throws XMLException {
         RelatedBean relatedBean = relatedEntity.newBean();
         parser.parseEntity(relatedEntity, relatedBean);
         return relatedBean.build();

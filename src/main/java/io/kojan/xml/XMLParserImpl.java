@@ -35,62 +35,74 @@ class XMLParserImpl implements XMLParser {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader cursor;
 
-    public XMLParserImpl(Reader reader) throws XMLStreamException {
-        cursor = XML_INPUT_FACTORY.createXMLStreamReader(reader);
-    }
-
-    private void error(String message) throws XMLStreamException {
-        throw new XMLStreamException(message + ", line: " + cursor.getLocation().getLineNumber() + ", columnn:"
-                + cursor.getLocation().getColumnNumber());
-    }
-
-    public String parseText() throws XMLStreamException {
-        for (StringBuilder sb = new StringBuilder(); ; cursor.next()) {
-            if (cursor.getEventType() == CHARACTERS) {
-                sb.append(cursor.getText());
-            } else if (cursor.getEventType() != COMMENT) {
-                return sb.toString();
-            }
+    public XMLParserImpl(Reader reader) throws XMLException {
+        try {
+            cursor = XML_INPUT_FACTORY.createXMLStreamReader(reader);
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
         }
     }
 
-    private void skipWhiteSpace() throws XMLStreamException {
+    private void error(String message) throws XMLException {
+        throw new XMLException(message + ", line: " + cursor.getLocation().getLineNumber() + ", columnn:"
+                + cursor.getLocation().getColumnNumber());
+    }
+
+    public String parseText() throws XMLException {
+        try {
+            for (StringBuilder sb = new StringBuilder(); ; cursor.next()) {
+                if (cursor.getEventType() == CHARACTERS) {
+                    sb.append(cursor.getText());
+                } else if (cursor.getEventType() != COMMENT) {
+                    return sb.toString();
+                }
+            }
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
+    }
+
+    private void skipWhiteSpace() throws XMLException {
         if (!parseText().chars().allMatch(Character::isWhitespace)) {
             error("Expected white space");
         }
     }
 
-    public boolean hasStartElement() throws XMLStreamException {
+    public boolean hasStartElement() throws XMLException {
         skipWhiteSpace();
 
         return cursor.getEventType() == START_ELEMENT;
     }
 
-    public boolean hasStartElement(String tag) throws XMLStreamException {
+    public boolean hasStartElement(String tag) throws XMLException {
         return hasStartElement() && cursor.getLocalName().equals(tag);
     }
 
-    public String parseStartElement() throws XMLStreamException {
-        if (!hasStartElement()) {
-            error("Expected a start element");
+    public String parseStartElement() throws XMLException {
+        try {
+            if (!hasStartElement()) {
+                error("Expected a start element");
+            }
+            String tag = cursor.getLocalName();
+            cursor.next();
+            return tag;
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
         }
-
-        String tag = cursor.getLocalName();
-
-        cursor.next();
-
-        return tag;
     }
 
-    public void parseStartElement(String tag) throws XMLStreamException {
-        if (!hasStartElement(tag)) {
-            error("Expected <" + tag + "> start element");
+    public void parseStartElement(String tag) throws XMLException {
+        try {
+            if (!hasStartElement(tag)) {
+                error("Expected <" + tag + "> start element");
+            }
+            cursor.next();
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
         }
-
-        cursor.next();
     }
 
-    private void expectToken(int token, String description) throws XMLStreamException {
+    private void expectToken(int token, String description) throws XMLException {
         skipWhiteSpace();
 
         if (cursor.getEventType() != token) {
@@ -98,22 +110,30 @@ class XMLParserImpl implements XMLParser {
         }
     }
 
-    public void parseEndElement(String tag) throws XMLStreamException {
-        expectToken(END_ELEMENT, "</" + tag + "> end element");
-        cursor.next();
+    public void parseEndElement(String tag) throws XMLException {
+        try {
+            expectToken(END_ELEMENT, "</" + tag + "> end element");
+            cursor.next();
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 
-    public void parseStartDocument() throws XMLStreamException {
+    private void parseStartDocument() throws XMLException {
         expectToken(START_DOCUMENT, "start of document");
-        cursor.next();
+        try {
+            cursor.next();
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 
-    public void parseEndDocument() throws XMLStreamException {
+    private void parseEndDocument() throws XMLException {
         expectToken(END_DOCUMENT, "end of document");
     }
 
     public <Type, Bean extends Builder<Type>> void parseEntity(Entity<Type, Bean> entity, Bean bean)
-            throws XMLStreamException {
+            throws XMLException {
         parseStartElement(entity.getTag());
 
         Set<Constituent<Type, Bean, ?, ?>> allowedElements = new LinkedHashSet<>(entity.getElements());
@@ -139,8 +159,7 @@ class XMLParserImpl implements XMLParser {
         }
     }
 
-    public <Type, Bean extends Builder<Type>> Type parseDocument(Entity<Type, Bean> rootEntity)
-            throws XMLStreamException {
+    <Type, Bean extends Builder<Type>> Type parseDocument(Entity<Type, Bean> rootEntity) throws XMLException {
         Bean rootBean = rootEntity.newBean();
         parseStartDocument();
         parseEntity(rootEntity, rootBean);

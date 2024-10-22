@@ -27,8 +27,12 @@ class XMLDumperImpl implements XMLDumper {
     private final XMLStreamWriter cursor;
     private int indent;
 
-    public XMLDumperImpl(Writer writer) throws XMLStreamException {
-        cursor = XML_OUTPUT_FACTORY.createXMLStreamWriter(writer);
+    XMLDumperImpl(Writer writer) throws XMLException {
+        try {
+            cursor = XML_OUTPUT_FACTORY.createXMLStreamWriter(writer);
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 
     private void indent() throws XMLStreamException {
@@ -41,48 +45,68 @@ class XMLDumperImpl implements XMLDumper {
         cursor.writeCharacters("\n");
     }
 
-    public void dumpStartDocument() throws XMLStreamException {
+    private void dumpStartDocument() throws XMLStreamException {
         cursor.writeStartDocument();
         newLine();
     }
 
-    public void dumpEndDocument() throws XMLStreamException {
+    private void dumpEndDocument() throws XMLStreamException {
         cursor.writeEndDocument();
     }
 
-    public void dumpStartElement(String tag) throws XMLStreamException {
-        indent();
-        cursor.writeStartElement(tag);
+    public void dumpStartElement(String tag) throws XMLException {
+        try {
+            indent();
+            cursor.writeStartElement(tag);
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 
-    public void dumpEndElement() throws XMLStreamException {
-        cursor.writeEndElement();
-        newLine();
+    public void dumpEndElement() throws XMLException {
+        try {
+            cursor.writeEndElement();
+            newLine();
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 
-    public void dumpText(String text) throws XMLStreamException {
-        cursor.writeCharacters(text);
+    public void dumpText(String text) throws XMLException {
+        try {
+            cursor.writeCharacters(text);
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 
     public <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value)
-            throws XMLStreamException {
-        dumpStartElement(entity.getTag());
-        newLine();
-        indent++;
+            throws XMLException {
+        try {
+            dumpStartElement(entity.getTag());
+            newLine();
+            indent++;
 
-        for (Constituent<Type, Bean, ?, ?> constituent : entity.getElements()) {
-            constituent.doDump(this, value);
+            for (Constituent<Type, Bean, ?, ?> constituent : entity.getElements()) {
+                constituent.doDump(this, value);
+            }
+
+            --indent;
+            indent();
+            dumpEndElement();
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
         }
-
-        --indent;
-        indent();
-        dumpEndElement();
     }
 
-    public <Type, Bean extends Builder<Type>> void dumpDocument(Entity<Type, Bean> rootEntity, Type value)
-            throws XMLStreamException {
-        dumpStartDocument();
-        dumpEntity(rootEntity, value);
-        dumpEndDocument();
+    <Type, Bean extends Builder<Type>> void dumpDocument(Entity<Type, Bean> rootEntity, Type value)
+            throws XMLException {
+        try {
+            dumpStartDocument();
+            dumpEntity(rootEntity, value);
+            dumpEndDocument();
+        } catch (XMLStreamException e) {
+            throw new XMLException(e);
+        }
     }
 }

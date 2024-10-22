@@ -16,7 +16,6 @@
 package io.kojan.xml;
 
 import java.util.function.Function;
-import javax.xml.stream.XMLStreamException;
 
 /** @author Mikolaj Izdebski */
 class Attribute<EnclosingType, EnclosingBean, AttributeType>
@@ -38,14 +37,14 @@ class Attribute<EnclosingType, EnclosingBean, AttributeType>
     }
 
     @Override
-    protected void dump(XMLDumper dumper, AttributeType value) throws XMLStreamException {
+    protected void dump(XMLDumper dumper, AttributeType value) throws XMLException {
         dumper.dumpStartElement(getTag());
         dumper.dumpText(toStringAdapter.apply(value));
         dumper.dumpEndElement();
     }
 
     @Override
-    protected AttributeType parse(XMLParser parser) throws XMLStreamException {
+    protected AttributeType parse(XMLParser parser) throws XMLException {
         parser.parseStartElement(getTag());
         String text = parser.parseText();
         parser.parseEndElement(getTag());
