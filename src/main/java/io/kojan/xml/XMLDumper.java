@@ -15,15 +15,13 @@
  */
 package io.kojan.xml;
 
-import javax.xml.stream.XMLStreamException;
-
 /** @author Mikolaj Izdebski */
 public interface XMLDumper {
-    void dumpStartElement(String tag) throws XMLStreamException;
+    void dumpStartElement(String tag) throws XMLException;
 
-    void dumpEndElement() throws XMLStreamException;
+    void dumpEndElement() throws XMLException;
 
-    void dumpText(String text) throws XMLStreamException;
+    void dumpText(String text) throws XMLException;
 
-    <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLStreamException;
+    <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLException;
 }

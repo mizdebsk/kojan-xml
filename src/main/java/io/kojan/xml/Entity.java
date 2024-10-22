@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-import javax.xml.stream.XMLStreamException;
 
 /** @author Mikolaj Izdebski */
 public class Entity<Type, Bean extends Builder<Type>> {
@@ -112,35 +111,35 @@ public class Entity<Type, Bean extends Builder<Type>> {
         elements.add(element);
     }
 
-    public Type readFromXML(Reader reader) throws IOException, XMLStreamException {
+    public Type readFromXML(Reader reader) throws IOException, XMLException {
         XMLParserImpl parser = new XMLParserImpl(reader);
         return parser.parseDocument(this);
     }
 
-    public Type readFromXML(Path path) throws IOException, XMLStreamException {
+    public Type readFromXML(Path path) throws IOException, XMLException {
         try (Reader reader = Files.newBufferedReader(path)) {
             return readFromXML(reader);
         }
     }
 
-    public Type fromXML(String xml) throws IOException, XMLStreamException {
+    public Type fromXML(String xml) throws IOException, XMLException {
         try (Reader reader = new StringReader(xml)) {
             return readFromXML(reader);
         }
     }
 
-    public void writeToXML(Writer writer, Type object) throws IOException, XMLStreamException {
+    public void writeToXML(Writer writer, Type object) throws IOException, XMLException {
         XMLDumperImpl dumper = new XMLDumperImpl(writer);
         dumper.dumpDocument(this, object);
     }
 
-    public void writeToXML(Path path, Type object) throws IOException, XMLStreamException {
+    public void writeToXML(Path path, Type object) throws IOException, XMLException {
         try (Writer writer = Files.newBufferedWriter(path)) {
             writeToXML(writer, object);
         }
     }
 
-    public String toXML(Type object) throws IOException, XMLStreamException {
+    public String toXML(Type object) throws IOException, XMLException {
         try (StringWriter writer = new StringWriter()) {
             writeToXML(writer, object);
             return writer.toString();

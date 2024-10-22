@@ -15,8 +15,6 @@
  */
 package io.kojan.xml;
 
-import javax.xml.stream.XMLStreamException;
-
 /** @author Mikolaj Izdebski */
 public abstract class Constituent<EnclosingType, EnclosingBean, NestedType, NestedBean> {
     private final String tag;
@@ -38,9 +36,9 @@ public abstract class Constituent<EnclosingType, EnclosingBean, NestedType, Nest
         this.unique = unique;
     }
 
-    protected abstract void dump(XMLDumper dumper, NestedType value) throws XMLStreamException;
+    protected abstract void dump(XMLDumper dumper, NestedType value) throws XMLException;
 
-    protected abstract NestedType parse(XMLParser parser) throws XMLStreamException;
+    protected abstract NestedType parse(XMLParser parser) throws XMLException;
 
     public String getTag() {
         return tag;
@@ -54,13 +52,13 @@ public abstract class Constituent<EnclosingType, EnclosingBean, NestedType, Nest
         return unique;
     }
 
-    public void doDump(XMLDumper dumper, EnclosingType object) throws XMLStreamException {
+    public void doDump(XMLDumper dumper, EnclosingType object) throws XMLException {
         for (NestedType value : getter.get(object)) {
             dump(dumper, value);
         }
     }
 
-    public boolean tryParse(XMLParser parser, EnclosingBean bean) throws XMLStreamException {
+    public boolean tryParse(XMLParser parser, EnclosingBean bean) throws XMLException {
         if (parser.hasStartElement(tag)) {
             setter.set(bean, parse(parser));
             return true;
