@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2020-2021 Red Hat, Inc.
+ * Copyright (c) 2020-2024 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
 
     public void addAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
         elements.add(new Attribute<>(
-                tag, new GetterAdapter<>(getter), setter, Function.identity(), Function.identity(), false, true));
+                tag, x -> List.of(getter.get(x)), setter, Function.identity(), Function.identity(), false, true));
     }
 
     public <AttributeType> void addAttribute(
@@ -63,12 +63,12 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
         elements.add(new Attribute<>(
-                tag, new GetterAdapter<>(getter), setter, toStringAdapter, fromStringAdapter, false, true));
+                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true));
     }
 
     public void addOptionalAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
         elements.add(new Attribute<>(
-                tag, new GetterAdapter<>(getter), setter, Function.identity(), Function.identity(), true, true));
+                tag, x -> List.of(getter.get(x)), setter, Function.identity(), Function.identity(), true, true));
     }
 
     public <AttributeType> void addOptionalAttribute(
@@ -78,7 +78,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
         elements.add(new Attribute<>(
-                tag, new GetterAdapter<>(getter), setter, toStringAdapter, fromStringAdapter, true, true));
+                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true));
     }
 
     public void addMultiAttribute(String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
@@ -98,7 +98,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Entity<RelatedType, RelatedBean> relatedEntity,
             Getter<Type, RelatedType> getter,
             Setter<Bean, RelatedType> setter) {
-        elements.add(new Relationship<>(relatedEntity, new GetterAdapter<>(getter), setter, true, true));
+        elements.add(new Relationship<>(relatedEntity, x -> List.of(getter.get(x)), setter, true, true));
     }
 
     public <RelatedType, RelatedBean extends Builder<RelatedType>> void addRelationship(
