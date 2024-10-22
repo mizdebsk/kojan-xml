@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2021 Red Hat, Inc.
+ * Copyright (c) 2021-2024 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,74 +15,15 @@
  */
 package io.kojan.xml;
 
-import java.io.Writer;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 /** @author Mikolaj Izdebski */
-public class XMLDumper {
-    private static final XMLOutputFactory XML_OUTPUT_FACTORY = XMLOutputFactory.newInstance();
+public interface XMLDumper {
+    void dumpStartElement(String tag) throws XMLStreamException;
 
-    private final XMLStreamWriter cursor;
-    private int indent;
+    void dumpEndElement() throws XMLStreamException;
 
-    public XMLDumper(Writer writer) throws XMLStreamException {
-        cursor = XML_OUTPUT_FACTORY.createXMLStreamWriter(writer);
-    }
+    void dumpText(String text) throws XMLStreamException;
 
-    private void indent() throws XMLStreamException {
-        for (int i = indent; i-- > 0; ) {
-            cursor.writeCharacters("  ");
-        }
-    }
-
-    private void newLine() throws XMLStreamException {
-        cursor.writeCharacters("\n");
-    }
-
-    public void dumpStartDocument() throws XMLStreamException {
-        cursor.writeStartDocument();
-        newLine();
-    }
-
-    public void dumpEndDocument() throws XMLStreamException {
-        cursor.writeEndDocument();
-    }
-
-    public void dumpStartElement(String tag) throws XMLStreamException {
-        indent();
-        cursor.writeStartElement(tag);
-    }
-
-    public void dumpEndElement() throws XMLStreamException {
-        cursor.writeEndElement();
-        newLine();
-    }
-
-    public void dumpText(String text) throws XMLStreamException {
-        cursor.writeCharacters(text);
-    }
-
-    public <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value)
-            throws XMLStreamException {
-        dumpStartElement(entity.getTag());
-        newLine();
-        indent++;
-
-        for (Constituent<Type, Bean, ?, ?> constituent : entity.getElements()) {
-            constituent.doDump(this, value);
-        }
-
-        --indent;
-        indent();
-        dumpEndElement();
-    }
-
-    public <Type, Bean extends Builder<Type>> void dumpDocument(Entity<Type, Bean> rootEntity, Type value)
-            throws XMLStreamException {
-        dumpStartDocument();
-        dumpEntity(rootEntity, value);
-        dumpEndDocument();
-    }
+    <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLStreamException;
 }

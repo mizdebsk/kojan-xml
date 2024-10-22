@@ -113,7 +113,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
     }
 
     public Type readFromXML(Reader reader) throws IOException, XMLStreamException {
-        XMLParser parser = new XMLParser(reader);
+        XMLParserImpl parser = new XMLParserImpl(reader);
         return parser.parseDocument(this);
     }
 
@@ -130,7 +130,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
     }
 
     public void writeToXML(Writer writer, Type object) throws IOException, XMLStreamException {
-        XMLDumper dumper = new XMLDumper(writer);
+        XMLDumperImpl dumper = new XMLDumperImpl(writer);
         dumper.dumpDocument(this, object);
     }
 
