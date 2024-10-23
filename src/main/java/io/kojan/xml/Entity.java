@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -111,7 +112,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
         elements.add(element);
     }
 
-    public Type readFromXML(Reader reader) throws IOException, XMLException {
+    public Type readFromXML(Reader reader) throws XMLException {
         XMLParserImpl parser = new XMLParserImpl(reader);
         return parser.parseDocument(this);
     }
@@ -122,13 +123,13 @@ public class Entity<Type, Bean extends Builder<Type>> {
         }
     }
 
-    public Type fromXML(String xml) throws IOException, XMLException {
-        try (Reader reader = new StringReader(xml)) {
+    public Type fromXML(String xml) throws XMLException {
+        try (StringReader reader = new StringReader(xml)) {
             return readFromXML(reader);
         }
     }
 
-    public void writeToXML(Writer writer, Type object) throws IOException, XMLException {
+    public void writeToXML(Writer writer, Type object) throws XMLException {
         XMLDumperImpl dumper = new XMLDumperImpl(writer);
         dumper.dumpDocument(this, object);
     }
@@ -139,10 +140,13 @@ public class Entity<Type, Bean extends Builder<Type>> {
         }
     }
 
-    public String toXML(Type object) throws IOException, XMLException {
+    public String toXML(Type object) throws XMLException {
         try (StringWriter writer = new StringWriter()) {
             writeToXML(writer, object);
             return writer.toString();
+        } catch (IOException e) {
+            // StringWriter.close() should never throw an IOException
+            throw new UncheckedIOException(e);
         }
     }
 }
