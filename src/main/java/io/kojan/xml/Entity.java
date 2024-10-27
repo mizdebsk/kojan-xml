@@ -32,7 +32,7 @@ import java.util.function.Function;
 public class Entity<Type, Bean extends Builder<Type>> {
     private final String tag;
     private final Factory<Bean> beanFactory;
-    private final List<Constituent<Type, Bean, ?, ?>> elements = new ArrayList<>();
+    private final List<Property<Type, Bean, ?, ?>> properties = new ArrayList<>();
 
     public Entity(String tag, Factory<Bean> beanFactory) {
         this.tag = tag;
@@ -47,12 +47,16 @@ public class Entity<Type, Bean extends Builder<Type>> {
         return beanFactory.newInstance();
     }
 
-    public List<Constituent<Type, Bean, ?, ?>> getElements() {
-        return Collections.unmodifiableList(elements);
+    public List<Property<Type, Bean, ?, ?>> getProperties() {
+        return Collections.unmodifiableList(properties);
+    }
+
+    public void addProperty(Property<Type, Bean, ?, ?> property) {
+        properties.add(property);
     }
 
     public void addAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        elements.add(new Attribute<>(
+        properties.add(new Attribute<>(
                 tag, x -> List.of(getter.get(x)), setter, Function.identity(), Function.identity(), false, true));
     }
 
@@ -62,12 +66,12 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Setter<Bean, AttributeType> setter,
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        elements.add(new Attribute<>(
+        addProperty(new Attribute<>(
                 tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true));
     }
 
     public void addOptionalAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        elements.add(new Attribute<>(
+        addProperty(new Attribute<>(
                 tag, x -> List.of(getter.get(x)), setter, Function.identity(), Function.identity(), true, true));
     }
 
@@ -77,12 +81,12 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Setter<Bean, AttributeType> setter,
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        elements.add(new Attribute<>(
+        addProperty(new Attribute<>(
                 tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true));
     }
 
     public void addMultiAttribute(String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
-        elements.add(new Attribute<>(tag, getter, setter, Function.identity(), Function.identity(), true, false));
+        addProperty(new Attribute<>(tag, getter, setter, Function.identity(), Function.identity(), true, false));
     }
 
     public <AttributeType> void addMultiAttribute(
@@ -91,25 +95,21 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Setter<Bean, AttributeType> setter,
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        elements.add(new Attribute<>(tag, getter, setter, toStringAdapter, fromStringAdapter, true, false));
+        addProperty(new Attribute<>(tag, getter, setter, toStringAdapter, fromStringAdapter, true, false));
     }
 
     public <RelatedType, RelatedBean extends Builder<RelatedType>> void addSingularRelationship(
             Entity<RelatedType, RelatedBean> relatedEntity,
             Getter<Type, RelatedType> getter,
             Setter<Bean, RelatedType> setter) {
-        elements.add(new Relationship<>(relatedEntity, x -> List.of(getter.get(x)), setter, true, true));
+        addProperty(new Relationship<>(relatedEntity, x -> List.of(getter.get(x)), setter, true, true));
     }
 
     public <RelatedType, RelatedBean extends Builder<RelatedType>> void addRelationship(
             Entity<RelatedType, RelatedBean> relatedEntity,
             Getter<Type, Iterable<RelatedType>> getter,
             Setter<Bean, RelatedType> setter) {
-        elements.add(new Relationship<>(relatedEntity, getter, setter, true, false));
-    }
-
-    public void addCustomElement(Constituent<Type, Bean, ?, ?> element) {
-        elements.add(element);
+        addProperty(new Relationship<>(relatedEntity, getter, setter, true, false));
     }
 
     public Type readFromXML(Reader reader) throws XMLException {
