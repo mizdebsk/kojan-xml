@@ -15,6 +15,7 @@
  */
 package io.kojan.xml;
 
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -35,6 +36,119 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
         extends Property<EnclosingType, EnclosingBean, AttributeType> {
     private final Function<AttributeType, String> toStringAdapter;
     private final Function<String, AttributeType> fromStringAdapter;
+
+    /**
+     * Creates a unique, non-optional String attribute.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param tag attribute XML tag name
+     * @param getter entity bean getter method that returns value of the attribute
+     * @param setter entity bean setter method that returns value of the attribute
+     * @return created attribute
+     */
+    public static <Type, Bean> Attribute<Type, Bean, String> of(
+            String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
+        return of(tag, getter, setter, Function.identity(), Function.identity());
+    }
+
+    /**
+     * Creates a unique, non-optional attribute.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param <AttributeType> type of attribute value
+     * @param tag attribute XML tag name
+     * @param getter entity bean getter method that returns value of the attribute
+     * @param setter entity bean setter method that returns value of the attribute
+     * @param toStringAdapter function that converts attribute value into a text form
+     * @param fromStringAdapter function that converts attribute value from a text form
+     * @return created attribute
+     */
+    public static <Type, Bean, AttributeType> Attribute<Type, Bean, AttributeType> of(
+            String tag,
+            Getter<Type, AttributeType> getter,
+            Setter<Bean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
+            Function<String, AttributeType> fromStringAdapter) {
+        return new Attribute<>(
+                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true);
+    }
+
+    /**
+     * Creates a unique, optional String attribute.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param tag attribute XML tag name
+     * @param getter entity bean getter method that returns value of the attribute
+     * @param setter entity bean setter method that returns value of the attribute
+     * @return created attribute
+     */
+    public static <Type, Bean> Attribute<Type, Bean, String> ofOptional(
+            String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
+        return ofOptional(tag, getter, setter, Function.identity(), Function.identity());
+    }
+
+    /**
+     * Creates a unique, optional attribute.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param <AttributeType> type of attribute value
+     * @param tag attribute XML tag name
+     * @param getter entity bean getter method that returns value of the attribute
+     * @param setter entity bean setter method that returns value of the attribute
+     * @param toStringAdapter function that converts attribute value into a text form
+     * @param fromStringAdapter function that converts attribute value from a text form
+     * @return created attribute
+     */
+    public static <Type, Bean, AttributeType> Attribute<Type, Bean, AttributeType> ofOptional(
+            String tag,
+            Getter<Type, AttributeType> getter,
+            Setter<Bean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
+            Function<String, AttributeType> fromStringAdapter) {
+        return new Attribute<>(
+                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true);
+    }
+
+    /**
+     * Creates a non-unique, optional String attribute.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param tag attribute XML tag name
+     * @param getter entity bean getter method that returns value of the attribute
+     * @param setter entity bean setter method that returns value of the attribute
+     * @return created attribute
+     */
+    public static <Type, Bean> Attribute<Type, Bean, String> ofMulti(
+            String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
+        return ofMulti(tag, getter, setter, Function.identity(), Function.identity());
+    }
+
+    /**
+     * Creates a non-unique, optional attribute.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param <AttributeType> type of attribute value
+     * @param tag attribute XML tag name
+     * @param getter entity bean getter method that returns value of the attribute
+     * @param setter entity bean setter method that returns value of the attribute
+     * @param toStringAdapter function that converts attribute value into a text form
+     * @param fromStringAdapter function that converts attribute value from a text form
+     * @return created attribute
+     */
+    public static <Type, Bean, AttributeType> Attribute<Type, Bean, AttributeType> ofMulti(
+            String tag,
+            Getter<Type, Iterable<AttributeType>> getter,
+            Setter<Bean, AttributeType> setter,
+            Function<AttributeType, String> toStringAdapter,
+            Function<String, AttributeType> fromStringAdapter) {
+        return new Attribute<>(tag, getter, setter, toStringAdapter, fromStringAdapter, true, false);
+    }
 
     /**
      * Creates an attribute of an entity.
