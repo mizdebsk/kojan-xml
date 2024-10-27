@@ -23,10 +23,8 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * An entity type. Type of things about which the data should be stored.
@@ -49,17 +47,35 @@ import java.util.function.Function;
 public class Entity<Type, Bean extends Builder<Type>> {
     private final String tag;
     private final Factory<Bean> beanFactory;
-    private final List<Property<Type, Bean, ?>> properties = new ArrayList<>();
+    private final List<Property<Type, Bean, ?>> properties;
 
     /**
-     * Creates an initial entity. The entity is mostly useless until one or more properties are added.
+     * Creates an entity.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param beanFactory factory used to create initial entity bean
+     * @param properties one or more entity properties
+     * @return created entity
+     */
+    @SafeVarargs
+    public static <Type, Bean extends Builder<Type>> Entity<Type, Bean> of(
+            String tag, Factory<Bean> beanFactory, Property<Type, Bean, ?>... properties) {
+        return new Entity<>(tag, beanFactory, Arrays.asList(properties));
+    }
+
+    /**
+     * Creates an entity.
      *
      * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
      * @param beanFactory factory used to create initial entity bean
+     * @param properties one or more entity properties
      */
-    public Entity(String tag, Factory<Bean> beanFactory) {
+    public Entity(String tag, Factory<Bean> beanFactory, List<Property<Type, Bean, ?>> properties) {
         this.tag = tag;
         this.beanFactory = beanFactory;
+        this.properties = List.copyOf(properties);
     }
 
     /**
@@ -86,138 +102,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
      * @return unmodifiable list of properties
      */
     public List<Property<Type, Bean, ?>> getProperties() {
-        return Collections.unmodifiableList(properties);
-    }
-
-    /**
-     * Add arbitrary property to the entity.
-     *
-     * @param property the property to add to the entity
-     */
-    public void addProperty(Property<Type, Bean, ?> property) {
-        properties.add(property);
-    }
-
-    /**
-     * Adds a unique, non-optional String attribute to the entity.
-     *
-     * @param tag attribute XML tag name
-     * @param getter entity bean getter method that returns value of the attribute
-     * @param setter entity bean setter method that returns value of the attribute
-     */
-    public void addAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        addProperty(Attribute.of(tag, getter, setter));
-    }
-
-    /**
-     * Adds a unique, non-optional attribute to the entity.
-     *
-     * @param <AttributeType> type of attribute value
-     * @param tag attribute XML tag name
-     * @param getter entity bean getter method that returns value of the attribute
-     * @param setter entity bean setter method that returns value of the attribute
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
-     */
-    public <AttributeType> void addAttribute(
-            String tag,
-            Getter<Type, AttributeType> getter,
-            Setter<Bean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter) {
-        addProperty(Attribute.of(tag, getter, setter, toStringAdapter, fromStringAdapter));
-    }
-
-    /**
-     * Adds a unique, optional String attribute to the entity.
-     *
-     * @param tag attribute XML tag name
-     * @param getter entity bean getter method that returns value of the attribute
-     * @param setter entity bean setter method that returns value of the attribute
-     */
-    public void addOptionalAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        addProperty(Attribute.ofOptional(tag, getter, setter));
-    }
-
-    /**
-     * Adds a unique, optional attribute to the entity.
-     *
-     * @param <AttributeType> type of attribute value
-     * @param tag attribute XML tag name
-     * @param getter entity bean getter method that returns value of the attribute
-     * @param setter entity bean setter method that returns value of the attribute
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
-     */
-    public <AttributeType> void addOptionalAttribute(
-            String tag,
-            Getter<Type, AttributeType> getter,
-            Setter<Bean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter) {
-        addProperty(Attribute.ofOptional(tag, getter, setter, toStringAdapter, fromStringAdapter));
-    }
-
-    /**
-     * Adds a non-unique, optional String attribute to the entity.
-     *
-     * @param tag attribute XML tag name
-     * @param getter entity bean getter method that returns value of the attribute
-     * @param setter entity bean setter method that returns value of the attribute
-     */
-    public void addMultiAttribute(String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
-        addProperty(Attribute.ofMulti(tag, getter, setter));
-    }
-
-    /**
-     * Adds a non-unique, optional attribute to the entity.
-     *
-     * @param <AttributeType> type of attribute value
-     * @param tag attribute XML tag name
-     * @param getter entity bean getter method that returns value of the attribute
-     * @param setter entity bean setter method that returns value of the attribute
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
-     */
-    public <AttributeType> void addMultiAttribute(
-            String tag,
-            Getter<Type, Iterable<AttributeType>> getter,
-            Setter<Bean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter) {
-        addProperty(Attribute.ofMulti(tag, getter, setter, toStringAdapter, fromStringAdapter));
-    }
-
-    /**
-     * Adds a unique, optional relationship with another entity.
-     *
-     * @param <RelatedType> data type of related entity
-     * @param <RelatedBean> type of bean of related entity
-     * @param relatedEntity related entity
-     * @param getter entity bean getter method that returns value of the related entity
-     * @param setter entity bean setter method that returns value of the related entity
-     */
-    public <RelatedType, RelatedBean extends Builder<RelatedType>> void addSingularRelationship(
-            Entity<RelatedType, RelatedBean> relatedEntity,
-            Getter<Type, RelatedType> getter,
-            Setter<Bean, RelatedType> setter) {
-        addProperty(Relationship.ofSingular(relatedEntity, getter, setter));
-    }
-
-    /**
-     * Adds a non-unique, optional relationship with another entity.
-     *
-     * @param <RelatedType> data type of related entity
-     * @param <RelatedBean> type of bean of related entity
-     * @param relatedEntity related entity
-     * @param getter entity bean getter method that returns value of the related entity
-     * @param setter entity bean setter method that returns value of the related entity
-     */
-    public <RelatedType, RelatedBean extends Builder<RelatedType>> void addRelationship(
-            Entity<RelatedType, RelatedBean> relatedEntity,
-            Getter<Type, Iterable<RelatedType>> getter,
-            Setter<Bean, RelatedType> setter) {
-        addProperty(Relationship.of(relatedEntity, getter, setter));
+        return properties;
     }
 
     /**
