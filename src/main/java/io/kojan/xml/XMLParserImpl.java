@@ -140,10 +140,10 @@ class XMLParserImpl implements XMLParser {
             throws XMLException {
         parseStartElement(entity.getTag());
 
-        Set<Property<Type, Bean, ?, ?>> allowedProperties = new LinkedHashSet<>(entity.getProperties());
+        Set<Property<Type, Bean, ?>> allowedProperties = new LinkedHashSet<>(entity.getProperties());
 
-        for (Iterator<Property<Type, Bean, ?, ?>> iterator = allowedProperties.iterator(); iterator.hasNext(); ) {
-            Property<Type, Bean, ?, ?> property = iterator.next();
+        for (Iterator<Property<Type, Bean, ?>> iterator = allowedProperties.iterator(); iterator.hasNext(); ) {
+            Property<Type, Bean, ?> property = iterator.next();
 
             if (property.tryParse(this, bean)) {
                 if (property.isUnique()) {
@@ -156,7 +156,7 @@ class XMLParserImpl implements XMLParser {
 
         parseEndElement(entity.getTag());
 
-        for (Property<Type, Bean, ?, ?> property : allowedProperties) {
+        for (Property<Type, Bean, ?> property : allowedProperties) {
             if (!property.isOptional()) {
                 error("Mandatory <" + property.getTag() + "> property of <" + entity.getTag() + "> has not been set");
             }

@@ -91,7 +91,7 @@ class XMLDumperImpl implements XMLDumper {
             newLine();
             indent++;
 
-            for (Property<Type, Bean, ?, ?> property : entity.getProperties()) {
+            for (Property<Type, Bean, ?> property : entity.getProperties()) {
                 property.doDump(this, value);
             }
 
