@@ -117,18 +117,20 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
     }
 
     /**
+     * Obtain property getter method that can be used to retrieve property value.
+     *
+     * @return property getter method
+     */
+    public Getter<EnclosingType, Iterable<NestedType>> getGetter() {
+        return getter;
+    }
+
+    /**
      * Obtain property setter method that can be used to update property value.
      *
      * @return property setter method
      */
     public Setter<EnclosingBean, NestedType> getSetter() {
         return setter;
-    }
-
-    // XXX inline?
-    void doDump(XMLDumper dumper, EnclosingType object) throws XMLException {
-        for (NestedType value : getter.get(object)) {
-            dump(dumper, value);
-        }
     }
 }

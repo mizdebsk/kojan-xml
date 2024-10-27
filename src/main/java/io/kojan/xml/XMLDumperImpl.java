@@ -84,6 +84,12 @@ class XMLDumperImpl implements XMLDumper {
         }
     }
 
+    private <Type, Bean, Value> void doDump(Property<Type, Bean, Value> property, Type object) throws XMLException {
+        for (Value value : property.getGetter().get(object)) {
+            property.dump(this, value);
+        }
+    }
+
     public <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value)
             throws XMLException {
         try {
@@ -92,7 +98,7 @@ class XMLDumperImpl implements XMLDumper {
             indent++;
 
             for (Property<Type, Bean, ?> property : entity.getProperties()) {
-                property.doDump(this, value);
+                doDump(property, value);
             }
 
             --indent;
