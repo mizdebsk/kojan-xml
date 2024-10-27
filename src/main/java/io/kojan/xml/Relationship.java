@@ -15,6 +15,8 @@
  */
 package io.kojan.xml;
 
+import java.util.List;
+
 /**
  * Relationship of one {@link Entity} type to another. A complex {@link Property} with no simple text representation.
  *
@@ -30,6 +32,46 @@ package io.kojan.xml;
 public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
         extends Property<EnclosingType, EnclosingBean, RelatedType> {
     private final Entity<RelatedType, RelatedBean> relatedEntity;
+
+    /**
+     * Creates a non-unique, optional relationship with another entity.
+     *
+     * @param <Type> data type of relating entity
+     * @param <Bean> type of bean associated with the relating entity
+     * @param <RelatedType> data type of related entity
+     * @param <RelatedBean> type of bean of related entity
+     * @param relatedEntity related entity
+     * @param getter entity bean getter method that returns value of the related entity
+     * @param setter entity bean setter method that returns value of the related entity
+     * @return created relationship
+     */
+    public static <Type, Bean, RelatedType, RelatedBean extends Builder<RelatedType>>
+            Relationship<Type, Bean, RelatedType, RelatedBean> of(
+                    Entity<RelatedType, RelatedBean> relatedEntity,
+                    Getter<Type, Iterable<RelatedType>> getter,
+                    Setter<Bean, RelatedType> setter) {
+        return new Relationship<>(relatedEntity, getter, setter, true, false);
+    }
+
+    /**
+     * Creates a unique, optional relationship with another entity.
+     *
+     * @param <Type> data type of relating entity
+     * @param <Bean> type of bean associated with the relating entity
+     * @param <RelatedType> data type of related entity
+     * @param <RelatedBean> type of bean of related entity
+     * @param relatedEntity related entity
+     * @param getter entity bean getter method that returns value of the related entity
+     * @param setter entity bean setter method that returns value of the related entity
+     * @return created relationship
+     */
+    public static <Type, Bean, RelatedType, RelatedBean extends Builder<RelatedType>>
+            Relationship<Type, Bean, RelatedType, RelatedBean> ofSingular(
+                    Entity<RelatedType, RelatedBean> relatedEntity,
+                    Getter<Type, RelatedType> getter,
+                    Setter<Bean, RelatedType> setter) {
+        return new Relationship<>(relatedEntity, x -> List.of(getter.get(x)), setter, true, true);
+    }
 
     /**
      * Creates a relationship between two entities.

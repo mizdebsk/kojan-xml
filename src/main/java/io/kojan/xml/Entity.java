@@ -106,7 +106,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
      * @param setter entity bean setter method that returns value of the attribute
      */
     public void addAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        addAttribute(tag, getter, setter, Function.identity(), Function.identity());
+        addProperty(Attribute.of(tag, getter, setter));
     }
 
     /**
@@ -125,8 +125,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Setter<Bean, AttributeType> setter,
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        addProperty(new Attribute<>(
-                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true));
+        addProperty(Attribute.of(tag, getter, setter, toStringAdapter, fromStringAdapter));
     }
 
     /**
@@ -137,7 +136,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
      * @param setter entity bean setter method that returns value of the attribute
      */
     public void addOptionalAttribute(String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        addOptionalAttribute(tag, getter, setter, Function.identity(), Function.identity());
+        addProperty(Attribute.ofOptional(tag, getter, setter));
     }
 
     /**
@@ -156,8 +155,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Setter<Bean, AttributeType> setter,
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        addProperty(new Attribute<>(
-                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true));
+        addProperty(Attribute.ofOptional(tag, getter, setter, toStringAdapter, fromStringAdapter));
     }
 
     /**
@@ -168,7 +166,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
      * @param setter entity bean setter method that returns value of the attribute
      */
     public void addMultiAttribute(String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
-        addMultiAttribute(tag, getter, setter, Function.identity(), Function.identity());
+        addProperty(Attribute.ofMulti(tag, getter, setter));
     }
 
     /**
@@ -187,7 +185,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Setter<Bean, AttributeType> setter,
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
-        addProperty(new Attribute<>(tag, getter, setter, toStringAdapter, fromStringAdapter, true, false));
+        addProperty(Attribute.ofMulti(tag, getter, setter, toStringAdapter, fromStringAdapter));
     }
 
     /**
@@ -203,7 +201,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Entity<RelatedType, RelatedBean> relatedEntity,
             Getter<Type, RelatedType> getter,
             Setter<Bean, RelatedType> setter) {
-        addProperty(new Relationship<>(relatedEntity, x -> List.of(getter.get(x)), setter, true, true));
+        addProperty(Relationship.ofSingular(relatedEntity, getter, setter));
     }
 
     /**
@@ -219,7 +217,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
             Entity<RelatedType, RelatedBean> relatedEntity,
             Getter<Type, Iterable<RelatedType>> getter,
             Setter<Bean, RelatedType> setter) {
-        addProperty(new Relationship<>(relatedEntity, getter, setter, true, false));
+        addProperty(Relationship.of(relatedEntity, getter, setter));
     }
 
     /**
