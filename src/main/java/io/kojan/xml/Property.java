@@ -116,20 +116,19 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
         return unique;
     }
 
+    /**
+     * Obtain property setter method that can be used to update property value.
+     *
+     * @return property setter method
+     */
+    public Setter<EnclosingBean, NestedType> getSetter() {
+        return setter;
+    }
+
     // XXX inline?
     void doDump(XMLDumper dumper, EnclosingType object) throws XMLException {
         for (NestedType value : getter.get(object)) {
             dump(dumper, value);
         }
-    }
-
-    // XXX inline?
-    boolean tryParse(XMLParser parser, EnclosingBean bean) throws XMLException {
-        if (parser.hasStartElement(tag)) {
-            setter.set(bean, parse(parser));
-            return true;
-        }
-
-        return false;
     }
 }

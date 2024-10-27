@@ -136,6 +136,15 @@ class XMLParserImpl implements XMLParser {
         expectToken(END_DOCUMENT, "end of document");
     }
 
+    private <Type, Bean, Value> boolean tryParse(Property<Type, Bean, Value> property, Bean bean) throws XMLException {
+        if (hasStartElement(property.getTag())) {
+            property.getSetter().set(bean, property.parse(this));
+            return true;
+        }
+
+        return false;
+    }
+
     public <Type, Bean extends Builder<Type>> void parseEntity(Entity<Type, Bean> entity, Bean bean)
             throws XMLException {
         parseStartElement(entity.getTag());
@@ -145,7 +154,7 @@ class XMLParserImpl implements XMLParser {
         for (Iterator<Property<Type, Bean, ?>> iterator = allowedProperties.iterator(); iterator.hasNext(); ) {
             Property<Type, Bean, ?> property = iterator.next();
 
-            if (property.tryParse(this, bean)) {
+            if (tryParse(property, bean)) {
                 if (property.isUnique()) {
                     iterator.remove();
                 }
