@@ -30,7 +30,11 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-/** @author Mikolaj Izdebski */
+/**
+ * An implementation of {@link XMLParser} using Java StAX API.
+ *
+ * @author Mikolaj Izdebski
+ */
 class XMLParserImpl implements XMLParser {
     private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
     private final XMLStreamReader cursor;

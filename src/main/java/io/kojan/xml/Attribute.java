@@ -17,12 +17,36 @@ package io.kojan.xml;
 
 import java.util.function.Function;
 
-/** @author Mikolaj Izdebski */
-class Attribute<EnclosingType, EnclosingBean, AttributeType>
+/**
+ * Attribute of an {@link Entity}. A simple {@link Property} with text representation.
+ *
+ * <p>Attribute values have a specified Java type. There are converter {@link Function}s that allow to convert attribute
+ * values to and from their text ({@link String}) representation.
+ *
+ * <p>When stored in XML form, an attribute is represented by a XML element with specified tag. Text content of the
+ * element specifies property value.
+ *
+ * @param <EnclosingType> data type of entity
+ * @param <EnclosingBean> type of bean associated with the entity
+ * @param <AttributeType> data type of attribute value
+ * @author Mikolaj Izdebski
+ */
+public class Attribute<EnclosingType, EnclosingBean, AttributeType>
         extends Property<EnclosingType, EnclosingBean, AttributeType, String> {
     private final Function<AttributeType, String> toStringAdapter;
     private final Function<String, AttributeType> fromStringAdapter;
 
+    /**
+     * Creates an attribute of an entity.
+     *
+     * @param tag XML element tag name used to serialize the attribute in XML form (see {@link #getTag})
+     * @param getter attribute getter method
+     * @param setter attribute setter method
+     * @param toStringAdapter function that converts attribute value into a text form
+     * @param fromStringAdapter function that converts attribute value from a text form
+     * @param optional whether the attribute is optional (see {@link #isOptional})
+     * @param unique whether the attribute is unique (see {@link #isUnique})
+     */
     public Attribute(
             String tag,
             Getter<EnclosingType, Iterable<AttributeType>> getter,

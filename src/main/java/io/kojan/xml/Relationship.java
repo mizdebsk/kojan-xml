@@ -15,18 +15,38 @@
  */
 package io.kojan.xml;
 
-/** @author Mikolaj Izdebski */
-class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
+/**
+ * Relationship of one {@link Entity} type to another. A complex {@link Property} with no simple text representation.
+ *
+ * <p>When stored in XML form, a relationship is represented by zero or more XML subtrees describing each of related
+ * entity instances.
+ *
+ * @param <EnclosingType> data type of entity
+ * @param <EnclosingBean> type of bean associated with the entity
+ * @param <RelatedType> data type of related entity
+ * @param <RelatedBean> type of bean of related entity
+ * @author Mikolaj Izdebski
+ */
+public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
         extends Property<EnclosingType, EnclosingBean, RelatedType, RelatedBean> {
     private final Entity<RelatedType, RelatedBean> relatedEntity;
 
+    /**
+     * Creates a relationship between two entities.
+     *
+     * @param relatedEntity entity that is related to
+     * @param getter relationship getter method
+     * @param setter relationship setter method
+     * @param optional whether the relationship is optional (see {@link #isOptional})
+     * @param unique whether the relationship is unique (see {@link #isUnique})
+     */
     public Relationship(
             Entity<RelatedType, RelatedBean> relatedEntity,
             Getter<EnclosingType, Iterable<RelatedType>> getter,
             Setter<EnclosingBean, RelatedType> setter,
-            boolean mandatory,
+            boolean optional,
             boolean unique) {
-        super(relatedEntity.getTag(), getter, setter, mandatory, unique);
+        super(relatedEntity.getTag(), getter, setter, optional, unique);
         this.relatedEntity = relatedEntity;
     }
 

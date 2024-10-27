@@ -20,7 +20,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/** @author Mikolaj Izdebski */
+/**
+ * An implementation of {@link XMLDumper} using Java StAX API.
+ *
+ * @author Mikolaj Izdebski
+ */
 class XMLDumperImpl implements XMLDumper {
     private static final XMLOutputFactory XML_OUTPUT_FACTORY = XMLOutputFactory.newInstance();
 

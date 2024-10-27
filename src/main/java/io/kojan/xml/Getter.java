@@ -15,8 +15,20 @@
  */
 package io.kojan.xml;
 
-/** @author Mikolaj Izdebski */
+/**
+ * Bean property getter.
+ *
+ * @param <OuterType> bean class
+ * @param <NestedType> type of property value
+ * @author Mikolaj Izdebski
+ */
 @FunctionalInterface
 public interface Getter<OuterType, NestedType> {
+    /**
+     * Returns the value of bean property.
+     *
+     * @param object the bean whose property should be returned
+     * @return bean property value
+     */
     NestedType get(OuterType object);
 }
