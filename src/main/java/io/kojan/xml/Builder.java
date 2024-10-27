@@ -15,7 +15,18 @@
  */
 package io.kojan.xml;
 
-/** @author Mikolaj Izdebski */
+/**
+ * An object builder. Gathers information and captures it in its internal state, and then allows building objects based
+ * on captured information.
+ *
+ * @param <Type> type of created objects
+ * @author Mikolaj Izdebski
+ */
 public interface Builder<Type> {
+    /**
+     * Builds an object out of captured state.
+     *
+     * @return newly-built object
+     */
     Type build();
 }

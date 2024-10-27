@@ -15,18 +15,42 @@
  */
 package io.kojan.xml;
 
-/** @author Mikolaj Izdebski */
+/**
+ * Indicates an exception that occurred during XML serialization or deserialization, such as malformed XML or XML not
+ * conforming to the expected schema.
+ *
+ * @author Mikolaj Izdebski
+ */
 public class XMLException extends Exception {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs a new XML exception with the specified detail message and no cause.
+     *
+     * @param message the exception detail message
+     * @see Exception#Exception(String)
+     */
     public XMLException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs a new XML exception with the specified detail message and cause.
+     *
+     * @param message the exception detail message
+     * @param cause the cause of this exception
+     * @see Exception#Exception(String,Throwable)
+     */
     public XMLException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructs a new XML exception with the specified cause and no detail message.
+     *
+     * @param cause the cause of this exception
+     * @see Exception#Exception(Throwable)
+     */
     public XMLException(Throwable cause) {
         super(cause);
     }

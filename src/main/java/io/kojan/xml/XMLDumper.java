@@ -15,13 +15,43 @@
  */
 package io.kojan.xml;
 
-/** @author Mikolaj Izdebski */
+/**
+ * A facility to serialize data in in XML format. Allows serialization of entities and writing of any other data.
+ *
+ * @author Mikolaj Izdebski
+ */
 public interface XMLDumper {
+    /**
+     * Writes a sequence that starts an XML element with given tag.
+     *
+     * @param tag element tag name
+     * @throws XMLException in case exception occurs during XML serialization
+     */
     void dumpStartElement(String tag) throws XMLException;
 
+    /**
+     * Writes a sequence that ends previously started XML element.
+     *
+     * @throws XMLException in case exception occurs during XML serialization
+     */
     void dumpEndElement() throws XMLException;
 
+    /**
+     * Writes XML text content.
+     *
+     * @param text text content to write
+     * @throws XMLException in case exception occurs during XML serialization
+     */
     void dumpText(String text) throws XMLException;
 
+    /**
+     * Serializes given {@link Entity} into XML form.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param entity the entity type to serialize
+     * @param value the object to serialize
+     * @throws XMLException in case exception occurs during XML serialization
+     */
     <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLException;
 }

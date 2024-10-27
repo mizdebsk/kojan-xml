@@ -15,7 +15,28 @@
  */
 package io.kojan.xml;
 
-/** @author Mikolaj Izdebski */
+/**
+ * Property of data {@link Entity}. Serves as a common base class for built-in {@link Attribute}s and
+ * {@link Relationship}s, as well as other user-defined custom entity properties.
+ *
+ * <p>An entity property is closely related to its corresponding bean property, understood as a pair of {@link Getter}
+ * and {@link Setter}.
+ *
+ * <p>A property can be optional, meaning that no instance of the property is required. If a property is not optional,
+ * then at least one instance of it is required for the entity to be valid.
+ *
+ * <p>A property can be unique, meaning that at most one instance of the property can be present. If the property is not
+ * unique, then more than one instance of the property is allowed.
+ *
+ * <p>Since non-unique properties allow multiple values, getters return {@link Iterable}s over values and setters allow
+ * multiple calls to add multiple values.
+ *
+ * @param <EnclosingType> data type of entity
+ * @param <EnclosingBean> type of bean associated with the entity
+ * @param <NestedType> data type of property value
+ * @param <NestedBean> XXX not needed?
+ * @author Mikolaj Izdebski
+ */
 public abstract class Property<EnclosingType, EnclosingBean, NestedType, NestedBean> {
     private final String tag;
     private final Getter<EnclosingType, Iterable<NestedType>> getter;
@@ -23,7 +44,16 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType, NestedB
     private final boolean optional;
     private final boolean unique;
 
-    public Property(
+    /**
+     * Initializes the abstract property.
+     *
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param getter property getter method
+     * @param setter property setter method
+     * @param optional whether the property is optional (see {@link #isOptional})
+     * @param unique whether the property is unique (see {@link #isUnique})
+     */
+    protected Property(
             String tag,
             Getter<EnclosingType, Iterable<NestedType>> getter,
             Setter<EnclosingBean, NestedType> setter,
@@ -36,29 +66,66 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType, NestedB
         this.unique = unique;
     }
 
+    /**
+     * Serializes the property into XML format, using given {@link XMLDumper}.
+     *
+     * @param dumper the sink to serialize data to
+     * @param value property value to serialize
+     * @throws XMLException in case exception occurs during XML serialization
+     */
     protected abstract void dump(XMLDumper dumper, NestedType value) throws XMLException;
 
+    /**
+     * Deserializes the property from XML format, using given {@link XMLParser}.
+     *
+     * @param parser the source to deserialize data from
+     * @return deserialized property value
+     * @throws XMLException in case exception occurs during XML deserialization
+     */
     protected abstract NestedType parse(XMLParser parser) throws XMLException;
 
+    /**
+     * Determines XML element tag name used to serialize the property in XML form.
+     *
+     * @return XML element tag name
+     */
     public String getTag() {
         return tag;
     }
 
+    /**
+     * Determines whether the property is optional or not.
+     *
+     * <p>A property can be optional, meaning that no instance of the property is required. If a property is not
+     * optional, then at least one instance of it is required for the entity to be valid.
+     *
+     * @return {@code true} iff the property is optional
+     */
     public boolean isOptional() {
         return optional;
     }
 
+    /**
+     * Determines whether the property is unique or not.
+     *
+     * <p>A property can be unique, meaning that at most one instance of the property can be present. If the property is
+     * not unique, then more than one instance of the property is allowed.
+     *
+     * @return {@code true} iff the property is unique
+     */
     public boolean isUnique() {
         return unique;
     }
 
-    public void doDump(XMLDumper dumper, EnclosingType object) throws XMLException {
+    // XXX inline?
+    void doDump(XMLDumper dumper, EnclosingType object) throws XMLException {
         for (NestedType value : getter.get(object)) {
             dump(dumper, value);
         }
     }
 
-    public boolean tryParse(XMLParser parser, EnclosingBean bean) throws XMLException {
+    // XXX inline?
+    boolean tryParse(XMLParser parser, EnclosingBean bean) throws XMLException {
         if (parser.hasStartElement(tag)) {
             setter.set(bean, parse(parser));
             return true;
