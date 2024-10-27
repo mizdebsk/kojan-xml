@@ -164,7 +164,7 @@ class XMLParserImpl implements XMLParser {
     }
 
     <Type, Bean extends Builder<Type>> Type parseDocument(Entity<Type, Bean> rootEntity) throws XMLException {
-        Bean rootBean = rootEntity.newBean();
+        Bean rootBean = rootEntity.getBeanFactory().newInstance();
         parseStartDocument();
         parseEntity(rootEntity, rootBean);
         parseEndDocument();

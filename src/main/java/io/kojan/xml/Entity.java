@@ -71,9 +71,13 @@ public class Entity<Type, Bean extends Builder<Type>> {
         return tag;
     }
 
-    // XXX inline?
-    Bean newBean() {
-        return beanFactory.newInstance();
+    /**
+     * Obtains a factory used to create initial entity bean.
+     *
+     * @return factory used to create initial entity bean
+     */
+    public Factory<Bean> getBeanFactory() {
+        return beanFactory;
     }
 
     /**
