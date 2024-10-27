@@ -136,25 +136,25 @@ class XMLParserImpl implements XMLParser {
             throws XMLException {
         parseStartElement(entity.getTag());
 
-        Set<Constituent<Type, Bean, ?, ?>> allowedElements = new LinkedHashSet<>(entity.getElements());
+        Set<Property<Type, Bean, ?, ?>> allowedProperties = new LinkedHashSet<>(entity.getProperties());
 
-        for (Iterator<Constituent<Type, Bean, ?, ?>> iterator = allowedElements.iterator(); iterator.hasNext(); ) {
-            Constituent<Type, Bean, ?, ?> constituent = iterator.next();
+        for (Iterator<Property<Type, Bean, ?, ?>> iterator = allowedProperties.iterator(); iterator.hasNext(); ) {
+            Property<Type, Bean, ?, ?> property = iterator.next();
 
-            if (constituent.tryParse(this, bean)) {
-                if (constituent.isUnique()) {
+            if (property.tryParse(this, bean)) {
+                if (property.isUnique()) {
                     iterator.remove();
                 }
 
-                iterator = allowedElements.iterator();
+                iterator = allowedProperties.iterator();
             }
         }
 
         parseEndElement(entity.getTag());
 
-        for (Constituent<Type, Bean, ?, ?> constituent : allowedElements) {
-            if (!constituent.isOptional()) {
-                error("Mandatory <" + constituent.getTag() + "> of <" + entity.getTag() + "> has not been set");
+        for (Property<Type, Bean, ?, ?> property : allowedProperties) {
+            if (!property.isOptional()) {
+                error("Mandatory <" + property.getTag() + "> property of <" + entity.getTag() + "> has not been set");
             }
         }
     }

@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 /** @author Mikolaj Izdebski */
 class Attribute<EnclosingType, EnclosingBean, AttributeType>
-        extends Constituent<EnclosingType, EnclosingBean, AttributeType, String> {
+        extends Property<EnclosingType, EnclosingBean, AttributeType, String> {
     private final Function<AttributeType, String> toStringAdapter;
     private final Function<String, AttributeType> fromStringAdapter;
 

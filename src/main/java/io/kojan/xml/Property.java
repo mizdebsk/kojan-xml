@@ -16,14 +16,14 @@
 package io.kojan.xml;
 
 /** @author Mikolaj Izdebski */
-public abstract class Constituent<EnclosingType, EnclosingBean, NestedType, NestedBean> {
+public abstract class Property<EnclosingType, EnclosingBean, NestedType, NestedBean> {
     private final String tag;
     private final Getter<EnclosingType, Iterable<NestedType>> getter;
     private final Setter<EnclosingBean, NestedType> setter;
     private final boolean optional;
     private final boolean unique;
 
-    public Constituent(
+    public Property(
             String tag,
             Getter<EnclosingType, Iterable<NestedType>> getter,
             Setter<EnclosingBean, NestedType> setter,
