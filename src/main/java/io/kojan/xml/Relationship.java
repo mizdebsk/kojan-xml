@@ -28,7 +28,7 @@ package io.kojan.xml;
  * @author Mikolaj Izdebski
  */
 public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
-        extends Property<EnclosingType, EnclosingBean, RelatedType, RelatedBean> {
+        extends Property<EnclosingType, EnclosingBean, RelatedType> {
     private final Entity<RelatedType, RelatedBean> relatedEntity;
 
     /**

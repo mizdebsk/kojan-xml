@@ -34,10 +34,9 @@ package io.kojan.xml;
  * @param <EnclosingType> data type of entity
  * @param <EnclosingBean> type of bean associated with the entity
  * @param <NestedType> data type of property value
- * @param <NestedBean> XXX not needed?
  * @author Mikolaj Izdebski
  */
-public abstract class Property<EnclosingType, EnclosingBean, NestedType, NestedBean> {
+public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
     private final String tag;
     private final Getter<EnclosingType, Iterable<NestedType>> getter;
     private final Setter<EnclosingBean, NestedType> setter;

@@ -32,7 +32,7 @@ import java.util.function.Function;
  * @author Mikolaj Izdebski
  */
 public class Attribute<EnclosingType, EnclosingBean, AttributeType>
-        extends Property<EnclosingType, EnclosingBean, AttributeType, String> {
+        extends Property<EnclosingType, EnclosingBean, AttributeType> {
     private final Function<AttributeType, String> toStringAdapter;
     private final Function<String, AttributeType> fromStringAdapter;
 

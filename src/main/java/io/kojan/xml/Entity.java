@@ -49,7 +49,7 @@ import java.util.function.Function;
 public class Entity<Type, Bean extends Builder<Type>> {
     private final String tag;
     private final Factory<Bean> beanFactory;
-    private final List<Property<Type, Bean, ?, ?>> properties = new ArrayList<>();
+    private final List<Property<Type, Bean, ?>> properties = new ArrayList<>();
 
     /**
      * Creates an initial entity. The entity is mostly useless until one or more properties are added.
@@ -81,7 +81,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
      *
      * @return unmodifiable list of properties
      */
-    public List<Property<Type, Bean, ?, ?>> getProperties() {
+    public List<Property<Type, Bean, ?>> getProperties() {
         return Collections.unmodifiableList(properties);
     }
 
@@ -90,7 +90,7 @@ public class Entity<Type, Bean extends Builder<Type>> {
      *
      * @param property the property to add to the entity
      */
-    public void addProperty(Property<Type, Bean, ?, ?> property) {
+    public void addProperty(Property<Type, Bean, ?> property) {
         properties.add(property);
     }
 
