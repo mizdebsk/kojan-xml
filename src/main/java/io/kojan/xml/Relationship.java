@@ -15,8 +15,6 @@
  */
 package io.kojan.xml;
 
-import java.util.List;
-
 /**
  * Relationship of one {@link Entity} type to another. A complex {@link Property} with no simple text representation.
  *
@@ -70,7 +68,7 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
                     Entity<RelatedType, RelatedBean> relatedEntity,
                     Getter<Type, RelatedType> getter,
                     Setter<Bean, RelatedType> setter) {
-        return new Relationship<>(relatedEntity, x -> List.of(getter.get(x)), setter, true, true);
+        return new Relationship<>(relatedEntity, x -> singleton(getter.get(x)), setter, true, true);
     }
 
     /**

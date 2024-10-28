@@ -15,6 +15,8 @@
  */
 package io.kojan.xml;
 
+import java.util.List;
+
 /**
  * Property of data {@link Entity}. Serves as a common base class for built-in {@link Attribute}s and
  * {@link Relationship}s, as well as other user-defined custom entity properties.
@@ -132,5 +134,9 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
      */
     public Setter<EnclosingBean, NestedType> getSetter() {
         return setter;
+    }
+
+    static <T> Iterable<T> singleton(T t) {
+        return t != null ? List.of(t) : List.of();
     }
 }

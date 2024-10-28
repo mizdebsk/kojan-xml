@@ -15,7 +15,6 @@
  */
 package io.kojan.xml;
 
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -72,7 +71,7 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
         return new Attribute<>(
-                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true);
+                tag, x -> singleton(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true);
     }
 
     /**
@@ -110,7 +109,7 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
             Function<AttributeType, String> toStringAdapter,
             Function<String, AttributeType> fromStringAdapter) {
         return new Attribute<>(
-                tag, x -> List.of(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true);
+                tag, x -> singleton(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true);
     }
 
     /**
