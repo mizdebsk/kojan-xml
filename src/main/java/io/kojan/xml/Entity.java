@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * An entity type. Type of things about which the data should be stored.
@@ -37,8 +36,8 @@ import java.util.function.Function;
  * assumptions about the mutability of the base type.
  *
  * <p>In addition to its main type, an entity also has a bean type, which is always mutable. Conversion from beans to
- * the base data type is done by supplied builder method, or by implementing the {@link Builder} interface. In the case
- * where the main type is mutable, it is acceptable for the main type and the bean type to be the same type.
+ * the base data type is done by supplied converter method, or by implementing the {@link Builder} interface. In the
+ * case where the main type is mutable, it is acceptable for the main type and the bean type to be the same type.
  *
  * @param <Type> data type of entity
  * @param <Bean> type of bean associated with the entity
@@ -47,17 +46,17 @@ import java.util.function.Function;
 public class Entity<Type, Bean> {
     private final String tag;
     private final Factory<Bean> beanFactory;
-    private final Function<Bean, Type> builder;
+    private final Converter<Bean, Type> converter;
     private final List<Property<Type, Bean, ?>> properties;
 
     /**
-     * Creates an entity using a builder method for converting entity beans to entity objects.
+     * Creates an entity using a converter method for converting entity beans to entity objects.
      *
      * @param <Type> data type of entity
      * @param <Bean> type of bean associated with the entity
      * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
      * @param beanFactory factory used to create initial entity bean
-     * @param builder builder method to build entity object out of entity bean
+     * @param converter converter function that converts entity bean to entity object
      * @param properties one or more entity properties
      * @return created entity
      */
@@ -65,9 +64,9 @@ public class Entity<Type, Bean> {
     public static <Type, Bean> Entity<Type, Bean> of(
             String tag,
             Factory<Bean> beanFactory,
-            Function<Bean, Type> builder,
+            Converter<Bean, Type> converter,
             Property<Type, Bean, ?>... properties) {
-        return new Entity<>(tag, beanFactory, builder, Arrays.asList(properties));
+        return new Entity<>(tag, beanFactory, converter, Arrays.asList(properties));
     }
 
     /**
@@ -98,7 +97,7 @@ public class Entity<Type, Bean> {
     @SafeVarargs
     public static <Type> Entity<Type, Type> ofMutable(
             String tag, Factory<Type> factory, Property<Type, Type, ?>... properties) {
-        return new Entity<>(tag, factory, Function.identity(), Arrays.asList(properties));
+        return new Entity<>(tag, factory, Converter::nop, Arrays.asList(properties));
     }
 
     /**
@@ -106,17 +105,17 @@ public class Entity<Type, Bean> {
      *
      * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
      * @param beanFactory factory used to create initial entity bean
-     * @param builder builder method to build entity object out of entity bean
+     * @param converter converter function that converts entity bean to entity object
      * @param properties one or more entity properties
      */
     public Entity(
             String tag,
             Factory<Bean> beanFactory,
-            Function<Bean, Type> builder,
+            Converter<Bean, Type> converter,
             List<Property<Type, Bean, ?>> properties) {
         this.tag = tag;
         this.beanFactory = beanFactory;
-        this.builder = builder;
+        this.converter = converter;
         this.properties = List.copyOf(properties);
     }
 
@@ -139,12 +138,12 @@ public class Entity<Type, Bean> {
     }
 
     /**
-     * Obtains a builder function used to build entity objects out of entity beans.
+     * Obtains a converter function that converts entity bean to entity object.
      *
-     * @return builder function used to build entity objects out of entity beans
+     * @return converter converter function that converts entity bean to entity object
      */
-    public Function<Bean, Type> getBuilder() {
-        return builder;
+    public Converter<Bean, Type> getBeanConverter() {
+        return converter;
     }
 
     /**

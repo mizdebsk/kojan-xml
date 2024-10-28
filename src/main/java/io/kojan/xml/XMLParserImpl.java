@@ -177,6 +177,6 @@ class XMLParserImpl implements XMLParser {
         parseStartDocument();
         parseEntity(rootEntity, rootBean);
         parseEndDocument();
-        return rootEntity.getBuilder().apply(rootBean);
+        return rootEntity.getBeanConverter().convert(rootBean);
     }
 }
