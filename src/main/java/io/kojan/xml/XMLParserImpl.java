@@ -47,8 +47,8 @@ class XMLParserImpl implements XMLParser {
         }
     }
 
-    private void error(String message) throws XMLException {
-        throw new XMLException(message + ", line: " + cursor.getLocation().getLineNumber() + ", columnn:"
+    private XMLException error(String message) throws XMLException {
+        return new XMLException(message + ", line: " + cursor.getLocation().getLineNumber() + ", columnn:"
                 + cursor.getLocation().getColumnNumber());
     }
 
@@ -68,7 +68,7 @@ class XMLParserImpl implements XMLParser {
 
     private void skipWhiteSpace() throws XMLException {
         if (!parseText().chars().allMatch(Character::isWhitespace)) {
-            error("Expected white space");
+            throw error("Expected white space");
         }
     }
 
@@ -85,7 +85,7 @@ class XMLParserImpl implements XMLParser {
     public String parseStartElement() throws XMLException {
         try {
             if (!hasStartElement()) {
-                error("Expected a start element");
+                throw error("Expected a start element");
             }
             String tag = cursor.getLocalName();
             cursor.next();
@@ -98,7 +98,7 @@ class XMLParserImpl implements XMLParser {
     public void parseStartElement(String tag) throws XMLException {
         try {
             if (!hasStartElement(tag)) {
-                error("Expected <" + tag + "> start element");
+                throw error("Expected <" + tag + "> start element");
             }
             cursor.next();
         } catch (XMLStreamException e) {
@@ -110,7 +110,7 @@ class XMLParserImpl implements XMLParser {
         skipWhiteSpace();
 
         if (cursor.getEventType() != token) {
-            error("Expected " + description);
+            throw error("Expected " + description);
         }
     }
 
@@ -167,7 +167,8 @@ class XMLParserImpl implements XMLParser {
 
         for (Property<Type, Bean, ?> property : allowedProperties) {
             if (!property.isOptional()) {
-                error("Mandatory <" + property.getTag() + "> property of <" + entity.getTag() + "> has not been set");
+                throw error(
+                        "Mandatory <" + property.getTag() + "> property of <" + entity.getTag() + "> has not been set");
             }
         }
     }
