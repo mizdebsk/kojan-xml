@@ -102,5 +102,5 @@ public interface XMLParser {
      * @param bean the entity bean to deserialize data into
      * @throws XMLException in case exception occurs during XML deserialization
      */
-    <Type, Bean extends Builder<Type>> void parseEntity(Entity<Type, Bean> entity, Bean bean) throws XMLException;
+    <Type, Bean> void parseEntity(Entity<Type, Bean> entity, Bean bean) throws XMLException;
 }

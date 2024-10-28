@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * An entity type. Type of things about which the data should be stored.
@@ -35,22 +36,42 @@ import java.util.List;
  * <p>An entity has an associated base data type, which may be immutable or mutable - the library code makes no
  * assumptions about the mutability of the base type.
  *
- * <p>In addition to its main type, an entity also has a bean type, which is always mutable, and implements the
- * {@link Builder} interface, allowing an object of the main type to be built from that bean. In the case where the main
- * type is mutable, it is acceptable for the main type and the bean type to be the same type, and the
- * {@link Builder#build()} method to simply return {@code this}.
+ * <p>In addition to its main type, an entity also has a bean type, which is always mutable. Conversion from beans to
+ * the base data type is done by supplied builder method, or by implementing the {@link Builder} interface. In the case
+ * where the main type is mutable, it is acceptable for the main type and the bean type to be the same type.
  *
  * @param <Type> data type of entity
  * @param <Bean> type of bean associated with the entity
  * @author Mikolaj Izdebski
  */
-public class Entity<Type, Bean extends Builder<Type>> {
+public class Entity<Type, Bean> {
     private final String tag;
     private final Factory<Bean> beanFactory;
+    private final Function<Bean, Type> builder;
     private final List<Property<Type, Bean, ?>> properties;
 
     /**
-     * Creates an entity.
+     * Creates an entity using a builder method for converting entity beans to entity objects.
+     *
+     * @param <Type> data type of entity
+     * @param <Bean> type of bean associated with the entity
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param beanFactory factory used to create initial entity bean
+     * @param builder builder method to build entity object out of entity bean
+     * @param properties one or more entity properties
+     * @return created entity
+     */
+    @SafeVarargs
+    public static <Type, Bean> Entity<Type, Bean> of(
+            String tag,
+            Factory<Bean> beanFactory,
+            Function<Bean, Type> builder,
+            Property<Type, Bean, ?>... properties) {
+        return new Entity<>(tag, beanFactory, builder, Arrays.asList(properties));
+    }
+
+    /**
+     * Creates an entity using a bean class implementing the {@link Builder} interface.
      *
      * @param <Type> data type of entity
      * @param <Bean> type of bean associated with the entity
@@ -62,7 +83,22 @@ public class Entity<Type, Bean extends Builder<Type>> {
     @SafeVarargs
     public static <Type, Bean extends Builder<Type>> Entity<Type, Bean> of(
             String tag, Factory<Bean> beanFactory, Property<Type, Bean, ?>... properties) {
-        return new Entity<>(tag, beanFactory, Arrays.asList(properties));
+        return new Entity<>(tag, beanFactory, Bean::build, Arrays.asList(properties));
+    }
+
+    /**
+     * Creates an entity over a mutable data type that does not need conversion from bean type.
+     *
+     * @param <Type> mutable data type of entity
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param factory factory used to create initial entity object
+     * @param properties one or more entity properties
+     * @return created entity
+     */
+    @SafeVarargs
+    public static <Type> Entity<Type, Type> ofMutable(
+            String tag, Factory<Type> factory, Property<Type, Type, ?>... properties) {
+        return new Entity<>(tag, factory, Function.identity(), Arrays.asList(properties));
     }
 
     /**
@@ -70,11 +106,17 @@ public class Entity<Type, Bean extends Builder<Type>> {
      *
      * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
      * @param beanFactory factory used to create initial entity bean
+     * @param builder builder method to build entity object out of entity bean
      * @param properties one or more entity properties
      */
-    public Entity(String tag, Factory<Bean> beanFactory, List<Property<Type, Bean, ?>> properties) {
+    public Entity(
+            String tag,
+            Factory<Bean> beanFactory,
+            Function<Bean, Type> builder,
+            List<Property<Type, Bean, ?>> properties) {
         this.tag = tag;
         this.beanFactory = beanFactory;
+        this.builder = builder;
         this.properties = List.copyOf(properties);
     }
 
@@ -94,6 +136,15 @@ public class Entity<Type, Bean extends Builder<Type>> {
      */
     public Factory<Bean> getBeanFactory() {
         return beanFactory;
+    }
+
+    /**
+     * Obtains a builder function used to build entity objects out of entity beans.
+     *
+     * @return builder function used to build entity objects out of entity beans
+     */
+    public Function<Bean, Type> getBuilder() {
+        return builder;
     }
 
     /**

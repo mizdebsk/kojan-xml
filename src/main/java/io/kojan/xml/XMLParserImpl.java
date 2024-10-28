@@ -145,8 +145,7 @@ class XMLParserImpl implements XMLParser {
         return false;
     }
 
-    public <Type, Bean extends Builder<Type>> void parseEntity(Entity<Type, Bean> entity, Bean bean)
-            throws XMLException {
+    public <Type, Bean> void parseEntity(Entity<Type, Bean> entity, Bean bean) throws XMLException {
         parseStartElement(entity.getTag());
 
         Set<Property<Type, Bean, ?>> allowedProperties = new LinkedHashSet<>(entity.getProperties());
@@ -173,11 +172,11 @@ class XMLParserImpl implements XMLParser {
         }
     }
 
-    <Type, Bean extends Builder<Type>> Type parseDocument(Entity<Type, Bean> rootEntity) throws XMLException {
+    <Type, Bean> Type parseDocument(Entity<Type, Bean> rootEntity) throws XMLException {
         Bean rootBean = rootEntity.getBeanFactory().newInstance();
         parseStartDocument();
         parseEntity(rootEntity, rootBean);
         parseEndDocument();
-        return rootBean.build();
+        return rootEntity.getBuilder().apply(rootBean);
     }
 }

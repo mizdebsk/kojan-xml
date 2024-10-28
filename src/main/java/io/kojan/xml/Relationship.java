@@ -27,7 +27,7 @@ package io.kojan.xml;
  * @param <RelatedBean> type of bean of related entity
  * @author Mikolaj Izdebski
  */
-public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean extends Builder<RelatedType>>
+public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean>
         extends Property<EnclosingType, EnclosingBean, RelatedType> {
     private final Entity<RelatedType, RelatedBean> relatedEntity;
 
@@ -43,11 +43,10 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
      * @param setter entity bean setter method that returns value of the related entity
      * @return created relationship
      */
-    public static <Type, Bean, RelatedType, RelatedBean extends Builder<RelatedType>>
-            Relationship<Type, Bean, RelatedType, RelatedBean> of(
-                    Entity<RelatedType, RelatedBean> relatedEntity,
-                    Getter<Type, Iterable<RelatedType>> getter,
-                    Setter<Bean, RelatedType> setter) {
+    public static <Type, Bean, RelatedType, RelatedBean> Relationship<Type, Bean, RelatedType, RelatedBean> of(
+            Entity<RelatedType, RelatedBean> relatedEntity,
+            Getter<Type, Iterable<RelatedType>> getter,
+            Setter<Bean, RelatedType> setter) {
         return new Relationship<>(relatedEntity, getter, setter, true, false);
     }
 
@@ -63,11 +62,10 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
      * @param setter entity bean setter method that returns value of the related entity
      * @return created relationship
      */
-    public static <Type, Bean, RelatedType, RelatedBean extends Builder<RelatedType>>
-            Relationship<Type, Bean, RelatedType, RelatedBean> ofSingular(
-                    Entity<RelatedType, RelatedBean> relatedEntity,
-                    Getter<Type, RelatedType> getter,
-                    Setter<Bean, RelatedType> setter) {
+    public static <Type, Bean, RelatedType, RelatedBean> Relationship<Type, Bean, RelatedType, RelatedBean> ofSingular(
+            Entity<RelatedType, RelatedBean> relatedEntity,
+            Getter<Type, RelatedType> getter,
+            Setter<Bean, RelatedType> setter) {
         return new Relationship<>(relatedEntity, x -> singleton(getter.get(x)), setter, true, true);
     }
 
@@ -99,6 +97,6 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
     protected RelatedType parse(XMLParser parser) throws XMLException {
         RelatedBean relatedBean = relatedEntity.getBeanFactory().newInstance();
         parser.parseEntity(relatedEntity, relatedBean);
-        return relatedBean.build();
+        return relatedEntity.getBuilder().apply(relatedBean);
     }
 }

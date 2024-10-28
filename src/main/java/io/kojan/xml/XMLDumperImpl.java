@@ -90,8 +90,7 @@ class XMLDumperImpl implements XMLDumper {
         }
     }
 
-    public <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value)
-            throws XMLException {
+    public <Type, Bean> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLException {
         try {
             dumpStartElement(entity.getTag());
             newLine();
@@ -109,8 +108,7 @@ class XMLDumperImpl implements XMLDumper {
         }
     }
 
-    <Type, Bean extends Builder<Type>> void dumpDocument(Entity<Type, Bean> rootEntity, Type value)
-            throws XMLException {
+    <Type, Bean> void dumpDocument(Entity<Type, Bean> rootEntity, Type value) throws XMLException {
         try {
             dumpStartDocument();
             dumpEntity(rootEntity, value);

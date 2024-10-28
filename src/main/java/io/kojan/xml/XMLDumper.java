@@ -53,5 +53,5 @@ public interface XMLDumper {
      * @param value the object to serialize
      * @throws XMLException in case exception occurs during XML serialization
      */
-    <Type, Bean extends Builder<Type>> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLException;
+    <Type, Bean> void dumpEntity(Entity<Type, Bean> entity, Type value) throws XMLException;
 }

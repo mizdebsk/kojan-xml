@@ -53,22 +53,22 @@ class BasicTest {
             Attribute.of("vin", Car::getVin, Car.B::setVin),
             Attribute.of("year", Car::getYear, Car.B::setYear, Object::toString, Integer::parseInt),
             new Relationship<>(
-                    Entity.of(
+                    Entity.ofMutable(
                             "engine",
-                            Engine.B::new,
-                            Attribute.ofOptional("fuel", Engine::getFuel, Engine.B::setFuel),
+                            Engine::new,
+                            Attribute.ofOptional("fuel", Engine::getFuel, Engine::setFuel),
                             Attribute.ofOptional(
-                                    "power",
-                                    Engine::getPower,
-                                    Engine.B::setPower,
-                                    Object::toString,
-                                    Integer::parseInt)),
+                                    "power", Engine::getPower, Engine::setPower, Object::toString, Integer::parseInt)),
                     car -> List.of(car.getEngine()),
                     Car.B::setEngine,
                     false,
                     true),
             Relationship.ofSingular(
-                    Entity.of("trailer", Trailer.B::new, Attribute.of("vin", Trailer::getVin, Trailer.B::setVin)),
+                    Entity.of(
+                            "trailer",
+                            Trailer.B::new,
+                            Trailer.B::customBuild,
+                            Attribute.of("vin", Trailer::getVin, Trailer.B::setVin)),
                     Car::getTrailer,
                     Car.B::setTrailer),
             Attribute.ofMulti("name", Car::getNames, Car.B::addName),

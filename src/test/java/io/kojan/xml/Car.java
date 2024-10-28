@@ -19,37 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Engine {
-    private final String fuel;
-    private final Integer power;
-
-    public Engine(String fuel, Integer power) {
-        this.fuel = fuel;
-        this.power = power;
-    }
+    private String fuel;
+    private Integer power;
 
     public String getFuel() {
         return fuel;
+    }
+
+    public void setFuel(String fuel) {
+        this.fuel = fuel;
     }
 
     public Integer getPower() {
         return power;
     }
 
-    static class B implements Builder<Engine> {
-        private String fuel;
-        private Integer power;
-
-        public void setFuel(String fuel) {
-            this.fuel = fuel;
-        }
-
-        public void setPower(Integer power) {
-            this.power = power;
-        }
-
-        public Engine build() {
-            return new Engine(fuel, power);
-        }
+    public void setPower(Integer power) {
+        this.power = power;
     }
 }
 
@@ -64,14 +50,14 @@ class Trailer {
         return vin;
     }
 
-    static class B implements Builder<Trailer> {
+    static class B {
         private String vin;
 
         public void setVin(String vin) {
             this.vin = vin;
         }
 
-        public Trailer build() {
+        public Trailer customBuild() {
             return new Trailer(vin);
         }
     }
