@@ -97,6 +97,6 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
     protected RelatedType parse(XMLParser parser) throws XMLException {
         RelatedBean relatedBean = relatedEntity.getBeanFactory().newInstance();
         parser.parseEntity(relatedEntity, relatedBean);
-        return relatedEntity.getBuilder().apply(relatedBean);
+        return relatedEntity.getBeanConverter().convert(relatedBean);
     }
 }

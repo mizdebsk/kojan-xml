@@ -15,13 +15,11 @@
  */
 package io.kojan.xml;
 
-import java.util.function.Function;
-
 /**
  * Attribute of an {@link Entity}. A simple {@link Property} with text representation.
  *
- * <p>Attribute values have a specified Java type. There are converter {@link Function}s that allow to convert attribute
- * values to and from their text ({@link String}) representation.
+ * <p>Attribute values have a specified Java type. There are {@link Converter}s that allow to convert attribute values
+ * to and from their text ({@link String}) representation.
  *
  * <p>When stored in XML form, an attribute is represented by a XML element with specified tag. Text content of the
  * element specifies property value.
@@ -33,8 +31,8 @@ import java.util.function.Function;
  */
 public class Attribute<EnclosingType, EnclosingBean, AttributeType>
         extends Property<EnclosingType, EnclosingBean, AttributeType> {
-    private final Function<AttributeType, String> toStringAdapter;
-    private final Function<String, AttributeType> fromStringAdapter;
+    private final Converter<AttributeType, String> toStringConverter;
+    private final Converter<String, AttributeType> fromStringConverter;
 
     /**
      * Creates a unique, non-optional String attribute.
@@ -48,7 +46,7 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      */
     public static <Type, Bean> Attribute<Type, Bean, String> of(
             String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        return of(tag, getter, setter, Function.identity(), Function.identity());
+        return of(tag, getter, setter, Converter::nop, Converter::nop);
     }
 
     /**
@@ -60,18 +58,18 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      * @param tag attribute XML tag name
      * @param getter entity bean getter method that returns value of the attribute
      * @param setter entity bean setter method that returns value of the attribute
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
+     * @param toStringConverter function that converts attribute value into a text form
+     * @param fromStringConverter function that converts attribute value from a text form
      * @return created attribute
      */
     public static <Type, Bean, AttributeType> Attribute<Type, Bean, AttributeType> of(
             String tag,
             Getter<Type, AttributeType> getter,
             Setter<Bean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter) {
+            Converter<AttributeType, String> toStringConverter,
+            Converter<String, AttributeType> fromStringConverter) {
         return new Attribute<>(
-                tag, x -> singleton(getter.get(x)), setter, toStringAdapter, fromStringAdapter, false, true);
+                tag, x -> singleton(getter.get(x)), setter, toStringConverter, fromStringConverter, false, true);
     }
 
     /**
@@ -86,7 +84,7 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      */
     public static <Type, Bean> Attribute<Type, Bean, String> ofOptional(
             String tag, Getter<Type, String> getter, Setter<Bean, String> setter) {
-        return ofOptional(tag, getter, setter, Function.identity(), Function.identity());
+        return ofOptional(tag, getter, setter, Converter::nop, Converter::nop);
     }
 
     /**
@@ -98,18 +96,18 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      * @param tag attribute XML tag name
      * @param getter entity bean getter method that returns value of the attribute
      * @param setter entity bean setter method that returns value of the attribute
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
+     * @param toStringConverter function that converts attribute value into a text form
+     * @param fromStringConverter function that converts attribute value from a text form
      * @return created attribute
      */
     public static <Type, Bean, AttributeType> Attribute<Type, Bean, AttributeType> ofOptional(
             String tag,
             Getter<Type, AttributeType> getter,
             Setter<Bean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter) {
+            Converter<AttributeType, String> toStringConverter,
+            Converter<String, AttributeType> fromStringConverter) {
         return new Attribute<>(
-                tag, x -> singleton(getter.get(x)), setter, toStringAdapter, fromStringAdapter, true, true);
+                tag, x -> singleton(getter.get(x)), setter, toStringConverter, fromStringConverter, true, true);
     }
 
     /**
@@ -124,7 +122,7 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      */
     public static <Type, Bean> Attribute<Type, Bean, String> ofMulti(
             String tag, Getter<Type, Iterable<String>> getter, Setter<Bean, String> setter) {
-        return ofMulti(tag, getter, setter, Function.identity(), Function.identity());
+        return ofMulti(tag, getter, setter, Converter::nop, Converter::nop);
     }
 
     /**
@@ -136,17 +134,17 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      * @param tag attribute XML tag name
      * @param getter entity bean getter method that returns value of the attribute
      * @param setter entity bean setter method that returns value of the attribute
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
+     * @param toStringConverter function that converts attribute value into a text form
+     * @param fromStringConverter function that converts attribute value from a text form
      * @return created attribute
      */
     public static <Type, Bean, AttributeType> Attribute<Type, Bean, AttributeType> ofMulti(
             String tag,
             Getter<Type, Iterable<AttributeType>> getter,
             Setter<Bean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter) {
-        return new Attribute<>(tag, getter, setter, toStringAdapter, fromStringAdapter, true, false);
+            Converter<AttributeType, String> toStringConverter,
+            Converter<String, AttributeType> fromStringConverter) {
+        return new Attribute<>(tag, getter, setter, toStringConverter, fromStringConverter, true, false);
     }
 
     /**
@@ -155,8 +153,8 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
      * @param tag XML element tag name used to serialize the attribute in XML form (see {@link #getTag})
      * @param getter attribute getter method
      * @param setter attribute setter method
-     * @param toStringAdapter function that converts attribute value into a text form
-     * @param fromStringAdapter function that converts attribute value from a text form
+     * @param toStringConverter function that converts attribute value into a text form
+     * @param fromStringConverter function that converts attribute value from a text form
      * @param optional whether the attribute is optional (see {@link #isOptional})
      * @param unique whether the attribute is unique (see {@link #isUnique})
      */
@@ -164,19 +162,19 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
             String tag,
             Getter<EnclosingType, Iterable<AttributeType>> getter,
             Setter<EnclosingBean, AttributeType> setter,
-            Function<AttributeType, String> toStringAdapter,
-            Function<String, AttributeType> fromStringAdapter,
+            Converter<AttributeType, String> toStringConverter,
+            Converter<String, AttributeType> fromStringConverter,
             boolean optional,
             boolean unique) {
         super(tag, getter, setter, optional, unique);
-        this.toStringAdapter = toStringAdapter;
-        this.fromStringAdapter = fromStringAdapter;
+        this.toStringConverter = toStringConverter;
+        this.fromStringConverter = fromStringConverter;
     }
 
     @Override
     protected void dump(XMLDumper dumper, AttributeType value) throws XMLException {
         dumper.dumpStartElement(getTag());
-        dumper.dumpText(toStringAdapter.apply(value));
+        dumper.dumpText(toStringConverter.convert(value));
         dumper.dumpEndElement();
     }
 
@@ -185,6 +183,6 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
         parser.parseStartElement(getTag());
         String text = parser.parseText();
         parser.parseEndElement(getTag());
-        return fromStringAdapter.apply(text);
+        return fromStringConverter.convert(text);
     }
 }
