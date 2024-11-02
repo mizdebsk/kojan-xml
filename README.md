@@ -1,3 +1,8 @@
+[![build status](https://img.shields.io/github/actions/workflow/status/mizdebsk/kojan-xml/ci.yml?branch=master)](https://github.com/mizdebsk/kojan-xml/actions/workflows/ci.yml?query=branch%3Amaster)
+[![License](https://img.shields.io/github/license/mizdebsk/kojan-xml.svg?label=License)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Maven Central version](https://img.shields.io/maven-central/v/io.kojan/kojan-xml.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.kojan/kojan-xml)
+[![Javadoc](https://javadoc.io/badge2/io.kojan/kojan-xml/javadoc.svg)](https://javadoc.io/doc/io.kojan/kojan-xml)
+
 Kojan XML
 =========
 
