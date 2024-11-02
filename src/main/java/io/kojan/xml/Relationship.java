@@ -16,10 +16,11 @@
 package io.kojan.xml;
 
 /**
- * Relationship of one {@link Entity} type to another. A complex {@link Property} with no simple text representation.
+ * Relationship of one {@link Entity} type to another. A complex {@link Property} with no simple
+ * text representation.
  *
- * <p>When stored in XML form, a relationship is represented by zero or more XML subtrees describing each of related
- * entity instances.
+ * <p>When stored in XML form, a relationship is represented by zero or more XML subtrees describing
+ * each of related entity instances.
  *
  * @param <EnclosingType> data type of entity
  * @param <EnclosingBean> type of bean associated with the entity
@@ -43,10 +44,11 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
      * @param setter entity bean setter method that returns value of the related entity
      * @return created relationship
      */
-    public static <Type, Bean, RelatedType, RelatedBean> Relationship<Type, Bean, RelatedType, RelatedBean> of(
-            Entity<RelatedType, RelatedBean> relatedEntity,
-            Getter<Type, Iterable<RelatedType>> getter,
-            Setter<Bean, RelatedType> setter) {
+    public static <Type, Bean, RelatedType, RelatedBean>
+            Relationship<Type, Bean, RelatedType, RelatedBean> of(
+                    Entity<RelatedType, RelatedBean> relatedEntity,
+                    Getter<Type, Iterable<RelatedType>> getter,
+                    Setter<Bean, RelatedType> setter) {
         return new Relationship<>(relatedEntity, getter, setter, true, false);
     }
 
@@ -62,10 +64,11 @@ public class Relationship<EnclosingType, EnclosingBean, RelatedType, RelatedBean
      * @param setter entity bean setter method that returns value of the related entity
      * @return created relationship
      */
-    public static <Type, Bean, RelatedType, RelatedBean> Relationship<Type, Bean, RelatedType, RelatedBean> ofSingular(
-            Entity<RelatedType, RelatedBean> relatedEntity,
-            Getter<Type, RelatedType> getter,
-            Setter<Bean, RelatedType> setter) {
+    public static <Type, Bean, RelatedType, RelatedBean>
+            Relationship<Type, Bean, RelatedType, RelatedBean> ofSingular(
+                    Entity<RelatedType, RelatedBean> relatedEntity,
+                    Getter<Type, RelatedType> getter,
+                    Setter<Bean, RelatedType> setter) {
         return new Relationship<>(relatedEntity, x -> singleton(getter.get(x)), setter, true, true);
     }
 

@@ -18,20 +18,21 @@ package io.kojan.xml;
 import java.util.List;
 
 /**
- * Property of data {@link Entity}. Serves as a common base class for built-in {@link Attribute}s and
- * {@link Relationship}s, as well as other user-defined custom entity properties.
+ * Property of data {@link Entity}. Serves as a common base class for built-in {@link Attribute}s
+ * and {@link Relationship}s, as well as other user-defined custom entity properties.
  *
- * <p>An entity property is closely related to its corresponding bean property, understood as a pair of {@link Getter}
- * and {@link Setter}.
+ * <p>An entity property is closely related to its corresponding bean property, understood as a pair
+ * of {@link Getter} and {@link Setter}.
  *
- * <p>A property can be optional, meaning that no instance of the property is required. If a property is not optional,
- * then at least one instance of it is required for the entity to be valid.
+ * <p>A property can be optional, meaning that no instance of the property is required. If a
+ * property is not optional, then at least one instance of it is required for the entity to be
+ * valid.
  *
- * <p>A property can be unique, meaning that at most one instance of the property can be present. If the property is not
- * unique, then more than one instance of the property is allowed.
+ * <p>A property can be unique, meaning that at most one instance of the property can be present. If
+ * the property is not unique, then more than one instance of the property is allowed.
  *
- * <p>Since non-unique properties allow multiple values, getters return {@link Iterable}s over values and setters allow
- * multiple calls to add multiple values.
+ * <p>Since non-unique properties allow multiple values, getters return {@link Iterable}s over
+ * values and setters allow multiple calls to add multiple values.
  *
  * @param <EnclosingType> data type of entity
  * @param <EnclosingBean> type of bean associated with the entity
@@ -48,7 +49,8 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
     /**
      * Initializes the abstract property.
      *
-     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link
+     *     #getTag})
      * @param getter property getter method
      * @param setter property setter method
      * @param optional whether the property is optional (see {@link #isOptional})
@@ -97,8 +99,9 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
     /**
      * Determines whether the property is optional or not.
      *
-     * <p>A property can be optional, meaning that no instance of the property is required. If a property is not
-     * optional, then at least one instance of it is required for the entity to be valid.
+     * <p>A property can be optional, meaning that no instance of the property is required. If a
+     * property is not optional, then at least one instance of it is required for the entity to be
+     * valid.
      *
      * @return {@code true} iff the property is optional
      */
@@ -109,8 +112,9 @@ public abstract class Property<EnclosingType, EnclosingBean, NestedType> {
     /**
      * Determines whether the property is unique or not.
      *
-     * <p>A property can be unique, meaning that at most one instance of the property can be present. If the property is
-     * not unique, then more than one instance of the property is allowed.
+     * <p>A property can be unique, meaning that at most one instance of the property can be
+     * present. If the property is not unique, then more than one instance of the property is
+     * allowed.
      *
      * @return {@code true} iff the property is unique
      */

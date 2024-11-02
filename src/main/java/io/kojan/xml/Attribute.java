@@ -18,11 +18,11 @@ package io.kojan.xml;
 /**
  * Attribute of an {@link Entity}. A simple {@link Property} with text representation.
  *
- * <p>Attribute values have a specified Java type. There are {@link Converter}s that allow to convert attribute values
- * to and from their text ({@link String}) representation.
+ * <p>Attribute values have a specified Java type. There are {@link Converter}s that allow to
+ * convert attribute values to and from their text ({@link String}) representation.
  *
- * <p>When stored in XML form, an attribute is represented by a XML element with specified tag. Text content of the
- * element specifies property value.
+ * <p>When stored in XML form, an attribute is represented by a XML element with specified tag. Text
+ * content of the element specifies property value.
  *
  * @param <EnclosingType> data type of entity
  * @param <EnclosingBean> type of bean associated with the entity
@@ -69,7 +69,13 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
             Converter<AttributeType, String> toStringConverter,
             Converter<String, AttributeType> fromStringConverter) {
         return new Attribute<>(
-                tag, x -> singleton(getter.get(x)), setter, toStringConverter, fromStringConverter, false, true);
+                tag,
+                x -> singleton(getter.get(x)),
+                setter,
+                toStringConverter,
+                fromStringConverter,
+                false,
+                true);
     }
 
     /**
@@ -107,7 +113,13 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
             Converter<AttributeType, String> toStringConverter,
             Converter<String, AttributeType> fromStringConverter) {
         return new Attribute<>(
-                tag, x -> singleton(getter.get(x)), setter, toStringConverter, fromStringConverter, true, true);
+                tag,
+                x -> singleton(getter.get(x)),
+                setter,
+                toStringConverter,
+                fromStringConverter,
+                true,
+                true);
     }
 
     /**
@@ -144,13 +156,15 @@ public class Attribute<EnclosingType, EnclosingBean, AttributeType>
             Setter<Bean, AttributeType> setter,
             Converter<AttributeType, String> toStringConverter,
             Converter<String, AttributeType> fromStringConverter) {
-        return new Attribute<>(tag, getter, setter, toStringConverter, fromStringConverter, true, false);
+        return new Attribute<>(
+                tag, getter, setter, toStringConverter, fromStringConverter, true, false);
     }
 
     /**
      * Creates an attribute of an entity.
      *
-     * @param tag XML element tag name used to serialize the attribute in XML form (see {@link #getTag})
+     * @param tag XML element tag name used to serialize the attribute in XML form (see {@link
+     *     #getTag})
      * @param getter attribute getter method
      * @param setter attribute setter method
      * @param toStringConverter function that converts attribute value into a text form

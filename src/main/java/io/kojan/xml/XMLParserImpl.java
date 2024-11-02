@@ -48,8 +48,12 @@ class XMLParserImpl implements XMLParser {
     }
 
     private XMLException error(String message) throws XMLException {
-        return new XMLException(message + ", line: " + cursor.getLocation().getLineNumber() + ", columnn:"
-                + cursor.getLocation().getColumnNumber());
+        return new XMLException(
+                message
+                        + ", line: "
+                        + cursor.getLocation().getLineNumber()
+                        + ", columnn:"
+                        + cursor.getLocation().getColumnNumber());
     }
 
     public String parseText() throws XMLException {
@@ -136,7 +140,8 @@ class XMLParserImpl implements XMLParser {
         expectToken(END_DOCUMENT, "end of document");
     }
 
-    private <Type, Bean, Value> boolean tryParse(Property<Type, Bean, Value> property, Bean bean) throws XMLException {
+    private <Type, Bean, Value> boolean tryParse(Property<Type, Bean, Value> property, Bean bean)
+            throws XMLException {
         if (hasStartElement(property.getTag())) {
             property.getSetter().set(bean, property.parse(this));
             return true;
@@ -148,9 +153,11 @@ class XMLParserImpl implements XMLParser {
     public <Type, Bean> void parseEntity(Entity<Type, Bean> entity, Bean bean) throws XMLException {
         parseStartElement(entity.getTag());
 
-        Set<Property<Type, Bean, ?>> allowedProperties = new LinkedHashSet<>(entity.getProperties());
+        Set<Property<Type, Bean, ?>> allowedProperties =
+                new LinkedHashSet<>(entity.getProperties());
 
-        for (Iterator<Property<Type, Bean, ?>> iterator = allowedProperties.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Property<Type, Bean, ?>> iterator = allowedProperties.iterator();
+                iterator.hasNext(); ) {
             Property<Type, Bean, ?> property = iterator.next();
 
             if (tryParse(property, bean)) {
@@ -167,7 +174,11 @@ class XMLParserImpl implements XMLParser {
         for (Property<Type, Bean, ?> property : allowedProperties) {
             if (!property.isOptional()) {
                 throw error(
-                        "Mandatory <" + property.getTag() + "> property of <" + entity.getTag() + "> has not been set");
+                        "Mandatory <"
+                                + property.getTag()
+                                + "> property of <"
+                                + entity.getTag()
+                                + "> has not been set");
             }
         }
     }
