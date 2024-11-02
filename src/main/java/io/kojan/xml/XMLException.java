@@ -16,8 +16,8 @@
 package io.kojan.xml;
 
 /**
- * Indicates an exception that occurred during XML serialization or deserialization, such as malformed XML or XML not
- * conforming to the expected schema.
+ * Indicates an exception that occurred during XML serialization or deserialization, such as
+ * malformed XML or XML not conforming to the expected schema.
  *
  * @author Mikolaj Izdebski
  */

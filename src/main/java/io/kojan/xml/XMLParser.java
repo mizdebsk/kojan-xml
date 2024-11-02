@@ -16,7 +16,8 @@
 package io.kojan.xml;
 
 /**
- * A facility to deserialize data in in XML format. Allows deserialization of entities and reading of any other data.
+ * A facility to deserialize data in in XML format. Allows deserialization of entities and reading
+ * of any other data.
  *
  * @author Mikolaj Izdebski
  */
@@ -44,12 +45,14 @@ public interface XMLParser {
     boolean hasStartElement() throws XMLException;
 
     /**
-     * Determines whether at the current parser position there is an XML element opening tag with specified tag name.
+     * Determines whether at the current parser position there is an XML element opening tag with
+     * specified tag name.
      *
      * <p>Comments and whitespace text preceding the XML tag are skipped.
      *
      * @param tag XML element tag name
-     * @return true iff at the current parser position there is an XML element with specified tag name
+     * @return true iff at the current parser position there is an XML element with specified tag
+     *     name
      * @throws XMLException in case exception occurs during XML deserialization
      */
     boolean hasStartElement(String tag) throws XMLException;
@@ -59,8 +62,8 @@ public interface XMLParser {
      *
      * <p>Comments and whitespace text preceding the XML tag are skipped.
      *
-     * <p>{@link XMLException} is thrown if at the current position there is no XML element (but, for example, text data
-     * or element closing tag).
+     * <p>{@link XMLException} is thrown if at the current position there is no XML element (but,
+     * for example, text data or element closing tag).
      *
      * @return XML element tag name
      * @throws XMLException in case exception occurs during XML deserialization
@@ -72,8 +75,9 @@ public interface XMLParser {
      *
      * <p>Comments and whitespace text preceding the XML tag are skipped.
      *
-     * <p>{@link XMLException} is thrown if at the current position there is no XML element opening tag with specified
-     * tag (but, for example, text data, element closing tag or element opening tag with a different tag name).
+     * <p>{@link XMLException} is thrown if at the current position there is no XML element opening
+     * tag with specified tag (but, for example, text data, element closing tag or element opening
+     * tag with a different tag name).
      *
      * @param tag XML element tag name
      * @throws XMLException in case exception occurs during XML deserialization
@@ -85,8 +89,9 @@ public interface XMLParser {
      *
      * <p>Comments and whitespace text preceding the XML tag are skipped.
      *
-     * <p>{@link XMLException} is thrown if at the current position there is no XML element closing tag with specified
-     * tag (but, for example, text data, element opening tag or XML element closing tag with a different tag name).
+     * <p>{@link XMLException} is thrown if at the current position there is no XML element closing
+     * tag with specified tag (but, for example, text data, element opening tag or XML element
+     * closing tag with a different tag name).
      *
      * @param tag XML element tag name
      * @throws XMLException in case exception occurs during XML deserialization

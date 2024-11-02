@@ -16,7 +16,8 @@
 package io.kojan.xml;
 
 /**
- * A facility to serialize data in in XML format. Allows serialization of entities and writing of any other data.
+ * A facility to serialize data in in XML format. Allows serialization of entities and writing of
+ * any other data.
  *
  * @author Mikolaj Izdebski
  */

@@ -84,7 +84,8 @@ class XMLDumperImpl implements XMLDumper {
         }
     }
 
-    private <Type, Bean, Value> void doDump(Property<Type, Bean, Value> property, Type object) throws XMLException {
+    private <Type, Bean, Value> void doDump(Property<Type, Bean, Value> property, Type object)
+            throws XMLException {
         for (Value value : property.getGetter().get(object)) {
             property.dump(this, value);
         }

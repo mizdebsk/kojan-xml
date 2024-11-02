@@ -47,33 +47,48 @@ class WheelProperty extends Property<Car, Car.B, Wheel> {
 
 class BasicTest {
 
-    Entity<Car, Car.B> entity = Entity.of(
-            "car",
-            Car.B::new,
-            Attribute.of("vin", Car::getVin, Car.B::setVin),
-            Attribute.of("year", Car::getYear, Car.B::setYear, Object::toString, Integer::parseInt),
-            new Relationship<>(
-                    Entity.ofMutable(
-                            "engine",
-                            Engine::new,
-                            Attribute.ofOptional("fuel", Engine::getFuel, Engine::setFuel),
-                            Attribute.ofOptional(
-                                    "power", Engine::getPower, Engine::setPower, Object::toString, Integer::parseInt)),
-                    car -> List.of(car.getEngine()),
-                    Car.B::setEngine,
-                    false,
-                    true),
-            Relationship.ofSingular(
-                    Entity.of(
-                            "trailer",
-                            Trailer.B::new,
-                            Trailer.B::customBuild,
-                            Attribute.of("vin", Trailer::getVin, Trailer.B::setVin)),
-                    Car::getTrailer,
-                    Car.B::setTrailer),
-            Attribute.ofMulti("name", Car::getNames, Car.B::addName),
-            Attribute.ofMulti("review", Car::getReviews, Car.B::addReview, Object::toString, Integer::parseInt),
-            new WheelProperty());
+    Entity<Car, Car.B> entity =
+            Entity.of(
+                    "car",
+                    Car.B::new,
+                    Attribute.of("vin", Car::getVin, Car.B::setVin),
+                    Attribute.of(
+                            "year",
+                            Car::getYear,
+                            Car.B::setYear,
+                            Object::toString,
+                            Integer::parseInt),
+                    new Relationship<>(
+                            Entity.ofMutable(
+                                    "engine",
+                                    Engine::new,
+                                    Attribute.ofOptional("fuel", Engine::getFuel, Engine::setFuel),
+                                    Attribute.ofOptional(
+                                            "power",
+                                            Engine::getPower,
+                                            Engine::setPower,
+                                            Object::toString,
+                                            Integer::parseInt)),
+                            car -> List.of(car.getEngine()),
+                            Car.B::setEngine,
+                            false,
+                            true),
+                    Relationship.ofSingular(
+                            Entity.of(
+                                    "trailer",
+                                    Trailer.B::new,
+                                    Trailer.B::customBuild,
+                                    Attribute.of("vin", Trailer::getVin, Trailer.B::setVin)),
+                            Car::getTrailer,
+                            Car.B::setTrailer),
+                    Attribute.ofMulti("name", Car::getNames, Car.B::addName),
+                    Attribute.ofMulti(
+                            "review",
+                            Car::getReviews,
+                            Car.B::addReview,
+                            Object::toString,
+                            Integer::parseInt),
+                    new WheelProperty());
 
     String xml;
     String xml2;

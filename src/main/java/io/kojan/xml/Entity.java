@@ -29,15 +29,17 @@ import java.util.List;
 /**
  * An entity type. Type of things about which the data should be stored.
  *
- * <p>When stored in XML form, an entity is represented by an XML element with a specified tag. Nested child elements
- * represent entity attributes, entity relationships and possibly other custom entity properties.
+ * <p>When stored in XML form, an entity is represented by an XML element with a specified tag.
+ * Nested child elements represent entity attributes, entity relationships and possibly other custom
+ * entity properties.
  *
- * <p>An entity has an associated base data type, which may be immutable or mutable - the library code makes no
- * assumptions about the mutability of the base type.
+ * <p>An entity has an associated base data type, which may be immutable or mutable - the library
+ * code makes no assumptions about the mutability of the base type.
  *
- * <p>In addition to its main type, an entity also has a bean type, which is always mutable. Conversion from beans to
- * the base data type is done by supplied converter method, or by implementing the {@link Builder} interface. In the
- * case where the main type is mutable, it is acceptable for the main type and the bean type to be the same type.
+ * <p>In addition to its main type, an entity also has a bean type, which is always mutable.
+ * Conversion from beans to the base data type is done by supplied converter method, or by
+ * implementing the {@link Builder} interface. In the case where the main type is mutable, it is
+ * acceptable for the main type and the bean type to be the same type.
  *
  * @param <Type> data type of entity
  * @param <Bean> type of bean associated with the entity
@@ -54,7 +56,8 @@ public class Entity<Type, Bean> {
      *
      * @param <Type> data type of entity
      * @param <Bean> type of bean associated with the entity
-     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link
+     *     #getTag})
      * @param beanFactory factory used to create initial entity bean
      * @param converter converter function that converts entity bean to entity object
      * @param properties one or more entity properties
@@ -74,7 +77,8 @@ public class Entity<Type, Bean> {
      *
      * @param <Type> data type of entity
      * @param <Bean> type of bean associated with the entity
-     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link
+     *     #getTag})
      * @param beanFactory factory used to create initial entity bean
      * @param properties one or more entity properties
      * @return created entity
@@ -89,7 +93,8 @@ public class Entity<Type, Bean> {
      * Creates an entity over a mutable data type that does not need conversion from bean type.
      *
      * @param <Type> mutable data type of entity
-     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link
+     *     #getTag})
      * @param factory factory used to create initial entity object
      * @param properties one or more entity properties
      * @return created entity
@@ -103,7 +108,8 @@ public class Entity<Type, Bean> {
     /**
      * Creates an entity.
      *
-     * @param tag XML element tag name used to serialize the property in XML form (see {@link #getTag})
+     * @param tag XML element tag name used to serialize the property in XML form (see {@link
+     *     #getTag})
      * @param beanFactory factory used to create initial entity bean
      * @param converter converter function that converts entity bean to entity object
      * @param properties one or more entity properties
