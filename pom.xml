@@ -22,7 +22,7 @@
     <version>6</version>
   </parent>
   <artifactId>kojan-xml</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>Kojan XML</name>
   <description>A simple library for modeling and writing data in XML format</description>
   <url>https://github.com/mizdebsk/kojan-xml</url>
