@@ -133,7 +133,7 @@ class BasicTest {
     @Test
     void testTextInWrongPlace() throws Exception {
         xml = "<car>text</car>";
-        expectException = "Expected white space";
+        expectException = "Expected </car> end element";
         performTest();
     }
 
