@@ -11,7 +11,7 @@ jobs:
     container: docker.io/library/eclipse-temurin:21-jdk-ubi9-minimal
     steps:
       - name: Install dependencies
-        run: microdnf -y install git-core maven rpm-libs
+        run: microdnf -y module enable maven:3.9 && microdnf -y install git-core maven-unbound
       - name: Checkout sources
         uses: actions/checkout@v4
       - name: Maven build
