@@ -19,7 +19,7 @@
   <parent>
     <groupId>io.kojan</groupId>
     <artifactId>kojan-parent</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
   <artifactId>kojan-xml</artifactId>
   <version>1.0.1</version>
